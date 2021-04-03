@@ -1,0 +1,73 @@
+---
+- hosts: s1.domain
+  tasks:
+    - name: comment s2 server
+      lineinfile:
+        path: /etc/nginx/sites-available/api.generic-backupy
+        regexp: '^.*server s2.domain.*$'
+        line: ' #server s2.domain:23451;'
+        backrefs: yes
+      become: yes
+    - name: check the config file
+      shell: nginx -t
+      become: yes
+    - name: restart nginx
+      shell: nginx -s reload
+      become: yes
+
+
+- hosts: s2.domain
+  tasks:
+    - name: update s2
+      shell:
+        cmd: ./server-update-full.sh
+        chdir: /opt/generic-backupy-api
+      become: yes
+
+
+- hosts: s1.domain
+  tasks:
+    - name: comment s3 server
+      lineinfile:
+        path: /etc/nginx/sites-available/api.generic-backupy
+        regexp: '^.*server s3.domain.*$'
+        line: ' #server s3.domain:23451;'
+        backrefs: yes
+      become: yes
+    - name: uncomment s2 server
+      lineinfile:
+        path: /etc/nginx/sites-available/api.generic-backupy
+        regexp: '^.*server s2.domain.*$'
+        line: ' server s2.domain:23451;'
+        backrefs: yes
+      become: yes
+    - name: check the config file
+      shell: nginx -t
+      become: yes
+    - name: restart nginx
+      shell: nginx -s reload
+      become: yes
+
+- hosts: s3.domain
+  tasks:
+    - name: update s3
+      shell:
+        cmd: ./server-update.sh
+        chdir: /opt/generic-backupy-api
+      become: yes
+
+- hosts: s1.domain
+  tasks:
+    - name: uncomment s3 server
+      lineinfile:
+        path: /etc/nginx/sites-available/api.generic-backupy
+        regexp: '^.*server s3.domain.*$'
+        line: ' server s3.domain:23451;'
+        backrefs: yes
+      become: yes
+    - name: check the config file
+      shell: nginx -t
+      become: yes
+    - name: restart nginx
+      shell: nginx -s reload
+      become: yes

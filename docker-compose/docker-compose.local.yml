@@ -1,0 +1,42 @@
+version: "3.9"
+
+networks:
+  generic-backupy-network-local:
+    name: generic-backupy-network-local
+
+volumes:
+  generic-backupy-db-volume-local:
+    name: generic-backupy-db-volume-local
+
+services:
+  db:
+    image: postgres:14.5
+    container_name: generic-backupy-api-db-local
+    env_file:
+      - ../.env
+      - ../postgres.env
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - generic-backupy-db-volume-local:/var/lib/postgresql/data
+    networks:
+      - generic-backupy-network-local
+  api:
+    build:
+      context: ..
+      dockerfile: docker/python/Dockerfile
+    image: generic-backupy/api
+    container_name: generic-backupy-api-local
+    volumes:
+      - ../app:/code
+    env_file:
+      - ../.env
+      - ../postgres.env
+      - ../django.env
+    command: python3 manage.py runserver 0.0.0.0:8000
+    ports:
+      - ${API_PORT}:8000
+    depends_on:
+      - db
+    networks:
+      - generic-backupy-network-local

@@ -1,0 +1,25 @@
+version: "3.9"
+
+networks:
+  generic-backupy-api-network:
+    name: generic-backupy-api-network
+
+services:
+  api:
+    restart: always
+    volumes:
+      - ../app:/code
+    build:
+      context: ..
+      dockerfile: docker/python/Dockerfile
+    image: generic-backupy/api
+    container_name: generic-backupy-api
+    env_file:
+      - ../.env
+      - ../postgres.env
+      - ../django.env
+    command: uwsgi --http "0.0.0.0:8001" --module genericbackupy.wsgi --master --processes ${UWSGI_PROCESSES} --threads ${UWSGI_THREADS} --check-static /code/genericbackupy/
+    ports:
+      - ${API_PORT}:8001
+    networks:
+      - generic-backupy-api-network

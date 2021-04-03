@@ -1,0 +1,30 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% translate "template.verification-code.title" %}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="viewport" content="width=device-width"/>
+    {{ css_part }}
+    <style>
+        .container-card {
+            margin-top: 8px;
+        }
+    </style>
+<body>
+<div class="full-page-container">
+    <div class="container-card">
+        <h2>{% translate "template.verification-code.welcome" %}</h2>
+        <h3>{% translate "template.verification-code.glad-that-you-are-here" %}</h3>
+        <p>{% translate "template.verification-code.explanation" %}</p>
+        <a href="{{verify_url}}?code={{code}}">
+            <button class="primary-button web-full-mobile-fit-button">{% translate "template.verification-code.verify" %}</button>
+        </a>
+        <p>{% translate "template.verification-code.button-doesnt-work" %}</p>
+        <a href="{{verify_url}}?code={{code}}">{{verify_url}}?code={{code}}</a>
+    </div>
+</div>
+</body>
+</html>
