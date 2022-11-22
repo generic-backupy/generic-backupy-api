@@ -79,7 +79,16 @@ class BackupJobViewSet(BaseViewSet):
             raise AppErrorException("BackupModule Loading Error",
                                     "There was an error at the loading process of the backup module", status_code=400)
         module_instance = backup_class()
+
         do_backup_response = module_instance.do_backup()
+
+        # TODO: What should we do with packages needed by the plugin?
+        #   We can't install it locally, because of different versions
+        #   Maybe we should execute each package in an own environment or in a docker container?
+        #   So each package is a docker image? The communication needs to be over the api, where the container gets a token, to
+        #   communicate with the api
+        #   Maybe another (more simpler way) is to load the environment of the python module. So each plugin has its own environment
+        #   which will be installed, when the user install the plugin. Then we just import the modules of the related environment.
         return Response(f"we got a response :) - {do_backup_response}", 200)
 
 """
