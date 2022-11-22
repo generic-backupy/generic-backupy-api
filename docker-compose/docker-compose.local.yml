@@ -62,6 +62,8 @@ services:
     image: generic-backupy/api
     deploy:
       replicas: 5
+      restart_policy:
+        condition: on-failure
     volumes:
       - ../app:/code
     env_file:
@@ -69,8 +71,9 @@ services:
       - ../postgres.env
       - ../django.env
       - ../redis.env
-    command: python3 manage.py rqworker default
+    command: python3 manage.py rqworker default --with-scheduler
     depends_on:
       - db
+      - redis
     networks:
       - generic-backupy-network-local

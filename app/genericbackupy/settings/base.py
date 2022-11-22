@@ -210,10 +210,10 @@ Q_CLUSTER = {
 
 RQ_QUEUES = {
     'default': {
-        'HOST': 'redis',
-        'PORT': 6379,
-        'DB': 0,
-        'PASSWORD': 'strong-password',
-        'DEFAULT_TIMEOUT': 360,
+        'HOST': os.environ.get('REDIS_HOST'),
+        'PORT': os.environ.get('REDIS_PORT'),
+        'DB': os.environ.get('REDIS_DB'),
+        'PASSWORD': os.environ.get('REDIS_PASSWORD'),
+        'DEFAULT_TIMEOUT': os.environ.get('RQ_DEFAULT_TIMEOUT'),
     }
 }
