@@ -6,13 +6,21 @@ from ..base import BaseModel
 from django.conf import settings
 
 
-class Tag(BaseModel):
+"""
+ModelClass for a System, which should be managed by generic-backupy (switches, routers, databases, etc.)
+"""
+class System(BaseModel):
     name = models.TextField(null=False)
     description = models.TextField(null=True, blank=True, default=None)
+    # ip address/domain like 10.10.10.2, router.local, db.test.com
+    host = models.TextField()
+    additional_information = models.TextField(null=True, blank=True, default=None)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    default=None,
                                    on_delete=models.CASCADE,
                                    null=True)
+    category = models.ForeignKey('Category', null=True, on_delete=models.SET_NULL,
+                                 blank=True, related_name='system_category')
 
     # filter
     search_fields = ['name']
@@ -21,16 +29,3 @@ class Tag(BaseModel):
 
     def __str__(self):
         return f"{self.id} - {self.name}"
-
-    @staticmethod
-    def check_duplicate(name, created_by):
-        return Tag.objects.filter(Q(name=name, created_by=created_by)).exists()
-
-    def clean(self):
-        if Tag.check_duplicate(self.name, self.created_by):
-            raise ValidationError("Duplicate!")
-        super(Tag, self).clean()
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        super(Tag, self).save(*args, **kwargs)

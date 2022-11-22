@@ -40,6 +40,12 @@ class CustomUserAdmin(UserAdmin):
 
 # Register your models here.
 admin.site.register(User, CustomUserAdmin)
-#admin.site.register(PasswordResetToken)
-#admin.site.register(PushToken)
-#admin.site.register(Tag)
+admin.site.register(PasswordResetToken)
+admin.site.register(PushToken)
+admin.site.register(Tag)
+admin.site.register(Category)
+admin.site.register(System)
+admin.site.register(BackupJob)
+admin.site.register(Backup)
+admin.site.register(BackupModule)
+admin.site.register(StorageModule)

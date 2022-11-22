@@ -5,14 +5,17 @@ from django.db.models import Q
 from ..base import BaseModel
 from django.conf import settings
 
-
-class Tag(BaseModel):
+"""
+ModelClass for a Category, which acts like a folder, which can have subfolders etc.
+"""
+class Category(BaseModel):
     name = models.TextField(null=False)
     description = models.TextField(null=True, blank=True, default=None)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    default=None,
                                    on_delete=models.CASCADE,
                                    null=True)
+    parent = models.ForeignKey('Category', null=True, on_delete=models.SET_NULL, blank=True)
 
     # filter
     search_fields = ['name']
@@ -21,16 +24,3 @@ class Tag(BaseModel):
 
     def __str__(self):
         return f"{self.id} - {self.name}"
-
-    @staticmethod
-    def check_duplicate(name, created_by):
-        return Tag.objects.filter(Q(name=name, created_by=created_by)).exists()
-
-    def clean(self):
-        if Tag.check_duplicate(self.name, self.created_by):
-            raise ValidationError("Duplicate!")
-        super(Tag, self).clean()
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        super(Tag, self).save(*args, **kwargs)

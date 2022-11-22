@@ -8,4 +8,4 @@ class PushToken(BaseModel):
     auth_token = models.ForeignKey(AuthToken, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} - {}".format(self.auth_token.user.username, self.key)
+        return f"{self.auth_token.user.username} - {self.key}"

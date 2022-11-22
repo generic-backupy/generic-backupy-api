@@ -17,4 +17,4 @@ class PasswordResetToken(BaseModel):
     ordering = ['created_at']
 
     def __str__(self):
-        return "{} - {}".format(self.id, self.token)
+        return f"{self.id} - {self.token}"

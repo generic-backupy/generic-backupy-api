@@ -2,3 +2,9 @@ from .user import *
 from .password_reset_token import *
 from .push_token import *
 from .tag import *
+from .category import *
+from .system import *
+from .storage_module import *
+from .backup_module import *
+from .backup_job import *
+from .backup import *
