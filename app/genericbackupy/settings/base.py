@@ -19,8 +19,6 @@ import firebase_admin
 PRIVACY_VERSION = "1.0.0"
 CONDITIONS_VERSION = "1.0.0"
 
-DEV_TEAM_USERNAMES = ["mrader", "Raffi", "verena"]
-
 firebase_admin.initialize_app()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
