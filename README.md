@@ -29,3 +29,18 @@ own docker file
 own docker file
 ### server
 own docker file
+
+## Redis
+### TODO SSL
+Find a solution to use ssl, to use the redis container as external service.
+Currently SSL should be deactivated, because it isn't working with a self-signed certificate.
+If we use the flag ssl_cert_reqs to prevent the cert check, we get an error, that the client (we)
+doesn't provide a certificate. So we also need to integrate the client cert, but there is 
+no information in the documentation for django-rq.
+
+### Add TLS files
+Navigate to the redis folder, and execute the `generate-tls-files.sh` script.
+```bash
+cd /redis
+./generate-tls-files.sh
+```

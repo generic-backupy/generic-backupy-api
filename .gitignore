@@ -215,3 +215,6 @@ postgres.env
 postgres_dumps/*.sql
 
 !docker-compose/.env
+
+redis/tls/*
+!redis/tls/.gitkeep
