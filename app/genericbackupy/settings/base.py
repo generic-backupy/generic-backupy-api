@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'knox',
     'django_filters',
     'django_q',
+    'django_rq'
 ]
 
 MIDDLEWARE = [
@@ -205,4 +206,14 @@ REST_KNOX = {
 Q_CLUSTER = {
     "name": "dh",
     "orm": "default",  # Use Django's ORM + database for broker
+}
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'redis',
+        'PORT': 6379,
+        'DB': 0,
+        'PASSWORD': 'strong-password',
+        'DEFAULT_TIMEOUT': 360,
+    }
 }

@@ -7,8 +7,22 @@ networks:
 volumes:
   generic-backupy-db-volume-local:
     name: generic-backupy-db-volume-local
+  generic-backupy-redis-volume-local:
+    name: generic-backupy-redis-volume-local
 
 services:
+  redis:
+    image: bitnami/redis:7.0
+    user: "${UID}:${GID}"
+    env_file:
+      - ../.env
+      - ../redis.env
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - generic-backupy-redis-volume-local:/bitnami/redis/data
+    networks:
+      - generic-backupy-network-local
   db:
     image: postgres:14.5
     container_name: generic-backupy-api-db-local
@@ -33,9 +47,29 @@ services:
       - ../.env
       - ../postgres.env
       - ../django.env
+      - ../redis.env
     command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - ${API_PORT}:8000
+    depends_on:
+      - db
+    networks:
+      - generic-backupy-network-local
+  qr-worker:
+    build:
+      context: ..
+      dockerfile: docker/python/Dockerfile
+    image: generic-backupy/api
+    deploy:
+      replicas: 5
+    volumes:
+      - ../app:/code
+    env_file:
+      - ../.env
+      - ../postgres.env
+      - ../django.env
+      - ../redis.env
+    command: python3 manage.py rqworker default
     depends_on:
       - db
     networks:

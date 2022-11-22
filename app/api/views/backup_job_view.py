@@ -7,15 +7,20 @@ from .base_view import BaseViewSet
 from ..exceptions import MessageStatusCodeException, AppErrorException
 from ..rms_base import RmsBaseViewSetFilter
 from ..serializers.backup_job_serializer import *
-from ..models import BackupJob
+from ..models import BackupJob, Backup
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language as get_language
 import os
 import importlib.util
 import sys
+import django_rq
+from django_rq import job
+from api.rq_tasks.test import *
 
 User = get_user_model()
+
+
 
 class BackupJobViewSetFilter(RmsBaseViewSetFilter):
     class Meta:
@@ -81,7 +86,8 @@ class BackupJobViewSet(BaseViewSet):
         module_instance = backup_class()
 
         do_backup_response = module_instance.do_backup()
-
+        for i in range(6):
+            test.delay(i, 2)
         # TODO: What should we do with packages needed by the plugin?
         #   We can't install it locally, because of different versions
         #   Maybe we should execute each package in an own environment or in a docker container?
@@ -90,6 +96,7 @@ class BackupJobViewSet(BaseViewSet):
         #   Maybe another (more simpler way) is to load the environment of the python module. So each plugin has its own environment
         #   which will be installed, when the user install the plugin. Then we just import the modules of the related environment.
         return Response(f"we got a response :) - {do_backup_response}", 200)
+
 
 """
 import importlib.util

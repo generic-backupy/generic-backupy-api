@@ -28,3 +28,7 @@ urlpatterns = [
         version="1.0.0"
     ), name='openapi-schema'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += [
+    path('django-rq/', include('django_rq.urls'))
+]
