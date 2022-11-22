@@ -15,6 +15,7 @@ import os
 import importlib.util
 import sys
 from api.rq_tasks.test import *
+from ..utils.backup_util import BackupUtil
 from ..utils.package_util import PackageUtil
 from django_rq import job
 import django_rq
@@ -55,19 +56,8 @@ class BackupJobViewSet(BaseViewSet):
             permission_classes=(IsAuthenticated,))
     def execute_backup(self, request, *args, **kwargs):
         backup_job = self.get_object()
-        backup_module = backup_job.backup_module
 
-        # return if no backup_module is specified
-        if not backup_module:
-            raise AppErrorException("No Backup Module",
-                                    "There is no backup module specified for this job", status_code=400)
-
-        module_instance = PackageUtil.get_python_class_of_module(backup_module)()
-
-        do_backup_response = module_instance.do_backup()
-        print("hey")
-        test.delay("another try :)", 4444)
-        print("last")
+        BackupUtil.do_backup(backup_job)
 
         # TODO: What should we do with packages needed by the plugin?
         #   We can't install it locally, because of different versions
@@ -76,7 +66,7 @@ class BackupJobViewSet(BaseViewSet):
         #   communicate with the api
         #   Maybe another (more simpler way) is to load the environment of the python module. So each plugin has its own environment
         #   which will be installed, when the user install the plugin. Then we just import the modules of the related environment.
-        return Response(f"we got a response :) - {do_backup_response}", 200)
+        return Response(f"we got a response :)", 200)
 
 
 """
