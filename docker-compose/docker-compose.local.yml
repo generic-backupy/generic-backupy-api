@@ -57,7 +57,7 @@ services:
       - db
     networks:
       - generic-backupy-network-local
-  qr-worker:
+  rq-worker:
     build:
       context: ..
       dockerfile: docker/python/Dockerfile
