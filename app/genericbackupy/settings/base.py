@@ -215,6 +215,6 @@ RQ_QUEUES = {
         'DB': os.environ.get('REDIS_DB'),
         'PASSWORD': os.environ.get('REDIS_PASSWORD'),
         'DEFAULT_TIMEOUT': os.environ.get('RQ_DEFAULT_TIMEOUT'),
-        "SSL": os.environ.get('REDIS_TLS_ENABLED')
+        "SSL": (os.environ.get('REDIS_TLS_ENABLED') or "False").lower() in ["true", "yes", "1"]
     }
 }

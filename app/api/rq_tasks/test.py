@@ -1,6 +1,8 @@
 from django_rq import job
+import django_rq
 from api.models import Backup
 import time
+
 
 @job
 def test(a, b):

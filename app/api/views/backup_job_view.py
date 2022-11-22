@@ -14,9 +14,10 @@ from django.utils.translation import get_language as get_language
 import os
 import importlib.util
 import sys
-import django_rq
-from django_rq import job
 from api.rq_tasks.test import *
+from ..utils.package_util import PackageUtil
+from django_rq import job
+import django_rq
 
 User = get_user_model()
 
@@ -61,33 +62,13 @@ class BackupJobViewSet(BaseViewSet):
             raise AppErrorException("No Backup Module",
                                     "There is no backup module specified for this job", status_code=400)
 
-        # fetch the python module
-        python_module = None
-        backup_class = None
-        # TODO: change the GBModule to the name which is specified in the modules gb.json file.
-        # TODO: also replace the python module file name
-        module_name = "GBModule"
-        module_file = "gb_module.py"
-        file_system_path = backup_module.file_system_path
-        # append a / if there is no / at the end
-        file_system_path += "/" if not file_system_path.endswith("/") else ""
-        # get the spec
-        spec = importlib.util.spec_from_file_location(module_name, f"{file_system_path}{module_file}")
-        if spec:
-            python_module = importlib.util.module_from_spec(spec)
-            if python_module:
-                sys.modules[module_name] = python_module
-                spec.loader.exec_module(python_module)
-            backup_class = getattr(python_module, module_name)
-
-        if not backup_class:
-            raise AppErrorException("BackupModule Loading Error",
-                                    "There was an error at the loading process of the backup module", status_code=400)
-        module_instance = backup_class()
+        module_instance = PackageUtil.get_python_class_of_module(backup_module)()
 
         do_backup_response = module_instance.do_backup()
-        for i in range(6):
-            test.delay(i, 2)
+        print("hey")
+        test.delay("another try :)", 4444)
+        print("last")
+
         # TODO: What should we do with packages needed by the plugin?
         #   We can't install it locally, because of different versions
         #   Maybe we should execute each package in an own environment or in a docker container?
