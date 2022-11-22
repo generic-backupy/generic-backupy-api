@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 class UserCurrentConditionsPermission(BasePermission):
     def has_permission(self, request, view):
+        return True # disable this later, if we want to use privacy and conditions
         user = request.user
         if user:
             path = request.path.split("/")
@@ -40,7 +41,7 @@ class UserCurrentConditionsPermission(BasePermission):
 class BaseViewSet(RmsBaseViewSet):
 
     def get_additional_permission_classes(self):
-        return (UserCurrentConditionsPermission)
+        return (UserCurrentConditionsPermission,)
 
     def has_permission_put(self):
         return self.has_permission_update()

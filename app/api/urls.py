@@ -11,6 +11,7 @@ router.register(r'pages', PageViewSet, basename="pages")
 router.register(r'users', UserViewSet, basename="users")
 router.register(r'push-tokens', PushTokenViewSet, basename="push-tokens")
 router.register(r'tags', TagViewSet, basename="tags")
+router.register(r'backup-jobs', BackupJobViewSet, basename="backup-jobs")
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

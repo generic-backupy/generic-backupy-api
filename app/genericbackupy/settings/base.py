@@ -16,8 +16,9 @@ from datetime import timedelta
 from rest_framework.settings import api_settings
 import firebase_admin
 
-PRIVACY_VERSION = "1.0.0"
-CONDITIONS_VERSION = "1.0.0"
+PRIVACY_VERSION = "0.0.1"
+CONDITIONS_VERSION = "0.0.1"
+API_VERSION = "0.0.1"
 
 firebase_admin.initialize_app()
 

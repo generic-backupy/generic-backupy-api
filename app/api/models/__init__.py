@@ -2,6 +2,7 @@ from .user import *
 from .password_reset_token import *
 from .push_token import *
 from .tag import *
+from .secret import *
 from .category import *
 from .system import *
 from .storage_module import *
