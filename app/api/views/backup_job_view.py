@@ -57,7 +57,7 @@ class BackupJobViewSet(BaseViewSet):
     def execute_backup(self, request, *args, **kwargs):
         backup_job = self.get_object()
 
-        BackupUtil.do_backup(backup_job)
+        BackupUtil.do_backup(backup_job, self.request.user)
 
         # TODO: What should we do with packages needed by the plugin?
         #   We can't install it locally, because of different versions

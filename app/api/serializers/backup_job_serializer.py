@@ -6,13 +6,13 @@ from ..models import BackupJob
 class BackupJobPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupJob
-        fields = ('name', 'description', 'additional_information',
+        fields = ('id', 'name', 'description', 'additional_information',
                   'system', 'backup_module', 'storage_module')
 
 class BackupJobRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupJob
-        fields = ('name', 'description', 'additional_information',
+        fields = ('id', 'name', 'description', 'additional_information',
                   'system', 'backup_module', 'storage_module')
 
 class BackupJobListSerializer(serializers.ModelSerializer):

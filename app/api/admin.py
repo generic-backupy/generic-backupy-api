@@ -37,6 +37,25 @@ class CustomUserAdmin(UserAdmin):
     list_display = UserAdmin.list_display + ('created_at', )
     ordering = ('-created_at', 'username')
 
+class BackupJobStorageModuleSecretInline(admin.TabularInline):
+    model = BackupJobStorageModuleSecret
+    extra = 1
+
+class BackupJobStorageModuleInline(admin.TabularInline):
+    model = BackupJobStorageModule
+    extra = 1
+    inlines = (BackupJobStorageModuleSecretInline,)
+
+class BackupJobSecretInline(admin.TabularInline):
+    model = BackupJobSecret
+    extra = 1
+
+class BackupJobAdmin(admin.ModelAdmin):
+    inlines = (BackupJobSecretInline, BackupJobStorageModuleInline)
+
+
+class BackupJobStorageModuleAdmin(admin.ModelAdmin):
+    inlines = (BackupJobStorageModuleSecretInline,)
 
 # Register your models here.
 admin.site.register(User, CustomUserAdmin)
@@ -45,7 +64,11 @@ admin.site.register(PushToken)
 admin.site.register(Tag)
 admin.site.register(Category)
 admin.site.register(System)
-admin.site.register(BackupJob)
+admin.site.register(BackupJob, BackupJobAdmin)
 admin.site.register(Backup)
 admin.site.register(BackupModule)
 admin.site.register(StorageModule)
+admin.site.register(BackupJobStorageModule, BackupJobStorageModuleAdmin)
+admin.site.register(Secret)
+admin.site.register(BackupExecution)
+admin.site.register(StorageExecution)
