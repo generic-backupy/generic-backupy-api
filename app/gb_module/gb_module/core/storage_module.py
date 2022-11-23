@@ -5,6 +5,7 @@ class StorageModule(BaseModule):
 
     def __init__(self):
         super().__init__()
+        self.encryption_secret = {}
 
     def save_to_storage(self, backup_result: BackupResult):
         pass

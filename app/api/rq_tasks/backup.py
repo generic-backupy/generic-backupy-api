@@ -1,12 +1,12 @@
 from django_rq import job
 import django_rq
 from api.models import Backup, BackupJob, BackupJobSecret, BackupJobStorageModule, Secret, BackupExecution, Parameter, \
-    StorageExecution
+    StorageExecution, System
 import time
 from django.utils.timezone import now
 
 from api.utils.package_util import PackageUtil
-from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerializer
+from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerializer, SystemGbModuleSerializer
 
 @job
 def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStorageModule], user):
@@ -14,6 +14,7 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
     backup_execution = BackupExecution.objects.create(created_by=user, backup_job=backup_job, backup_module=backup_module)
     package_instance = None
     do_backup_response = None
+    system_dict = SystemGbModuleSerializer(backup_job.system).data
     # get an instance of the plugin
     try:
         package_instance = PackageUtil.get_python_class_of_module(backup_module)()
@@ -36,6 +37,9 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
         # inject the params
         backup_parameters = Parameter.objects.filter(backup_job_parameter_parameter__backup_job=backup_job).distinct()
         package_instance.parameters = ParameterGbModuleSerializer(backup_parameters, many=True).data
+
+        # inject the system
+        package_instance.system = system_dict
 
         # inject the log function
         def backup_log(message):
@@ -102,6 +106,14 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
                 backup_job_storage_model_parameter_parameter__backup_job_storage_module=storage_module_pivot
             ).distinct()
             storage_package_instance.parameters = ParameterGbModuleSerializer(storage_parameters, many=True).data
+
+            # inject the system
+            storage_package_instance.system = system_dict
+
+            # inject encryption_secret if specified
+            if storage_module_pivot.encryption_secret:
+                storage_package_instance.encryption_secret = SecretGbModuleSerializer(
+                    storage_module_pivot.encryption_secret).data
 
             # inject the log function
             def storage_log(message):

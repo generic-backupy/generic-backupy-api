@@ -4,6 +4,7 @@ class BaseModule:
         self.secrets = []
         self.parameters = []
         self.log = BaseModule.default_log
+        self.system = {}
 
     @staticmethod
     def default_log(message):
