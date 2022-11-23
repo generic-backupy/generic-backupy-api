@@ -20,6 +20,10 @@ class StorageExecution(BaseModel):
     state = models.IntegerField(default=1)
     # output of the execution
     output = models.TextField(null=True, blank=True)
+    # logs of the execution
+    logs = models.TextField(null=True, blank=True)
+    # errors of the execution
+    errors = models.TextField(null=True, blank=True)
     # backup job
     backup_job = models.ForeignKey('BackupJob', on_delete=models.CASCADE)
     # storage module

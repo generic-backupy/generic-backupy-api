@@ -30,6 +30,13 @@ class Backup(BaseModel):
                                       blank=True, related_name='backup_backup_module')
     storage_module = models.ForeignKey('StorageModule', null=True, on_delete=models.SET_NULL,
                                        blank=True, related_name='backup_storage_module')
+    additional_parameters = models.JSONField(null=True, blank=True)
+    backup_execution = models.ForeignKey('BackupExecution', null=True, blank=True, on_delete=models.SET_NULL)
+    storage_execution = models.ForeignKey('StorageExecution', null=True, blank=True, on_delete=models.SET_NULL)
+
+    # TODO: add pivot table and fields for restore_executions and retrieve_executions
+    #   or maybe a pivot table for a new table Restore, which contains the restore_exection,
+    #   backup_execution and information about it
 
     # filter
     search_fields = ['name']

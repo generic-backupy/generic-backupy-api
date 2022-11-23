@@ -1,6 +1,7 @@
 from django_rq import job
 import django_rq
-from api.models import Backup, BackupJob, BackupJobSecret, BackupJobStorageModule, Secret, BackupExecution, Parameter
+from api.models import Backup, BackupJob, BackupJobSecret, BackupJobStorageModule, Secret, BackupExecution, Parameter, \
+    StorageExecution
 import time
 from django.utils.timezone import now
 
@@ -8,51 +9,146 @@ from api.utils.package_util import PackageUtil
 from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerializer
 
 @job
-def backup(backup_job: BackupJob, backup_module, storageModules: [BackupJobStorageModule], user):
-    # get an instance of the plugin
-    package_instance = PackageUtil.get_python_class_of_module(backup_module)()
-
-    # inject the secrets
-    backup_secrets = Secret.objects.filter(backup_job_secret_secret__backup_job=backup_job).distinct()
-    package_instance.secrets = SecretGbModuleSerializer(backup_secrets, many=True).data
-
-    # inject the params
-    backup_parameters = Parameter.objects.filter(backup_job_parameter_parameter__backup_job=backup_job).distinct()
-    package_instance.parameters = ParameterGbModuleSerializer(backup_parameters, many=True).data
-
+def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStorageModule], user):
     # start a backup_execution
     backup_execution = BackupExecution.objects.create(created_by=user, backup_job=backup_job, backup_module=backup_module)
-
-    # inject the log function
-    def backup_log(message):
-        message = f"{now()} - {message}\n"
-        print(message)
-        if not backup_execution.logs:
-            backup_execution.logs = message
-        else:
-            backup_execution.logs += message
-        backup_execution.save()
-    package_instance.log = backup_log
-
-    # do backup and fetch response (which is the backup) (catch error here)
+    package_instance = None
     do_backup_response = None
+    # get an instance of the plugin
     try:
-        do_backup_response = package_instance.do_backup()
-    except Exception as error:
-        print(f"error: ", error)
-        backup_execution.state = 2
-        backup_execution.errors = error
+        package_instance = PackageUtil.get_python_class_of_module(backup_module)()
+    except FileNotFoundError as e:
+        print("file not found error at loading backup_instance")
+        backup_execution.errors = f"file not found error: {e}"
+    except Exception as e:
+        print("error at loading backup_instance")
+        backup_execution.errors = f"file not found error: {e}"
+
+    if not package_instance:
+        backup_execution.save()
+        return
+
+    if package_instance:
+        # inject the secrets
+        backup_secrets = Secret.objects.filter(backup_job_secret_secret__backup_job=backup_job).distinct()
+        package_instance.secrets = SecretGbModuleSerializer(backup_secrets, many=True).data
+
+        # inject the params
+        backup_parameters = Parameter.objects.filter(backup_job_parameter_parameter__backup_job=backup_job).distinct()
+        package_instance.parameters = ParameterGbModuleSerializer(backup_parameters, many=True).data
+
+        # inject the log function
+        def backup_log(message):
+            message = f"{now()} - {message}\n"
+            print(message)
+            if not backup_execution.logs:
+                backup_execution.logs = message
+            else:
+                backup_execution.logs += message
+            backup_execution.save()
+        package_instance.log = backup_log
+
+        # do backup and fetch response (which is a backup_result type)
+        try:
+            do_backup_response = package_instance.do_backup()
+        except Exception as error:
+            print(f"error: ", error)
+            backup_execution.state = 2
+            backup_execution.errors = error
 
     # end the backup_execution
     backup_execution.ends_at = now()
     backup_execution.state = 3
-    backup_execution.output = do_backup_response
+    if not do_backup_response or do_backup_response.error:
+        backup_execution.state = 2
+        if do_backup_response:
+            backup_execution.errors = (backup_execution.errors or "") + (do_backup_response.error or "")
+        elif not backup_execution.errors:
+            backup_execution.errors = "UNKNOWN ERROR"
+    if do_backup_response:
+        backup_execution.output = do_backup_response.output
     backup_execution.save()
 
-    # create backup
-    Backup.objects.create(name=f"backup for {backup_job.name}, {do_backup_response}", backup_job=backup_job)
+    # return if we had an error
+    if backup_execution.state == 2:
+        return
 
-    # TODO: Store the result with the store_modules (import it in the paramters) (loop for all store_modules)
     # in loop create a module_instance, inject secrets and params, create a storage_execution,
     # create the backup and save it with the store_module, create the backup object, and end the storage_execution
+    for storage_module_pivot in storage_modules:
+        storage_module = storage_module_pivot.storage_module
+        # start a storage_execution
+        storage_execution = StorageExecution.objects.create(created_by=user, backup_job=backup_job, storage_module=storage_module)
+        storage_package_instance = None
+        do_storage_response = None
+        try:
+            storage_package_instance = PackageUtil.get_python_class_of_module(storage_module)()
+        except FileNotFoundError as e:
+            print("file not found error at loading backup_instance")
+            storage_execution.errors = f"file not found error: {e}"
+        except Exception as e:
+            print("error at loading backup_instance")
+            storage_execution.errors = f"file not found error: {e}"
 
+        if storage_package_instance:
+            # inject the secrets
+            storage_secrets = Secret.objects.filter(
+                backup_job_storage_model_secret_secret__backup_job_storage_module=storage_module_pivot
+            ).distinct()
+            storage_package_instance.secrets = SecretGbModuleSerializer(storage_secrets, many=True).data
+
+            # inject the params
+            storage_parameters = Parameter.objects.filter(
+                backup_job_storage_model_parameter_parameter__backup_job_storage_module=storage_module_pivot
+            ).distinct()
+            storage_package_instance.parameters = ParameterGbModuleSerializer(storage_parameters, many=True).data
+
+            # inject the log function
+            def storage_log(message):
+                message = f"{now()} - {message}\n"
+                print(message)
+                if not storage_execution.logs:
+                    storage_execution.logs = message
+                else:
+                    storage_execution.logs += message
+                storage_execution.save()
+            storage_package_instance.log = storage_log
+
+            # do storage and fetch response (which is a storage_result type)
+            try:
+                do_storage_response = storage_package_instance.save_to_storage(do_backup_response)
+            except Exception as error:
+                print(f"error: ", error)
+                storage_execution.state = 2
+                storage_execution.errors = error
+    
+        # end the storage_execution
+        storage_execution.ends_at = now()
+        storage_execution.state = 3
+        if not do_storage_response or do_storage_response.error:
+            storage_execution.state = 2
+            if do_storage_response:
+                storage_execution.errors = (storage_execution.errors or "") + (do_storage_response.error or "")
+            elif not storage_execution.errors:
+                storage_execution.errors = "UNKNOWN ERROR"
+        if do_storage_response:
+            storage_execution.output = do_storage_response.output
+
+        storage_execution.save()
+
+        # return if we had an error
+        if storage_execution.state == 2:
+            return
+
+        # save backup
+        backup = Backup.objects.create(
+            name=backup_job.name,
+            created_by=user,
+            path=do_storage_response.path,
+            backup_job=backup_job,
+            backup_module=backup_module,
+            storage_module=storage_module,
+            additional_parameters=do_storage_response.additional_parameters_dict,
+            backup_execution=backup_execution,
+            storage_execution=storage_execution
+        )
