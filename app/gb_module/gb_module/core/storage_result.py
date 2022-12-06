@@ -13,3 +13,7 @@ class StorageResult:
         self.output = output
         # error
         self.error = error
+
+    @staticmethod
+    def with_error(error, output=None):
+        return StorageResult(error=error, output=output)

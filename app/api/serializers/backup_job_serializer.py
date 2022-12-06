@@ -7,13 +7,13 @@ class BackupJobPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupJob
         fields = ('id', 'name', 'description', 'additional_information',
-                  'system', 'backup_module', 'storage_module')
+                  'system', 'backup_module', 'storage_modules')
 
 class BackupJobRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupJob
         fields = ('id', 'name', 'description', 'additional_information',
-                  'system', 'backup_module', 'storage_module')
+                  'system', 'backup_module', 'storage_modules')
 
 class BackupJobListSerializer(serializers.ModelSerializer):
 

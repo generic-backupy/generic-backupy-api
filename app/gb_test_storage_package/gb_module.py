@@ -7,6 +7,7 @@ class GBModule(StorageModule):
     def save_to_storage(self, backup_result: BackupResult):
         # simulate long running storing process
         self.log("start storing process (mock)")
+        self.log(f"we have a path? {self.get_param_with_name('path')}")
         self.log("connect to server ...")
         time.sleep(2)
         self.log("copy to server ...")

@@ -13,7 +13,7 @@ class Parameter(BaseModel):
                                    default=None,
                                    on_delete=models.CASCADE,
                                    null=True)
-    parameter = models.TextField()
+    parameter = models.JSONField()
 
     # filter
     search_fields = ['name']

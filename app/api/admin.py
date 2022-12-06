@@ -41,6 +41,10 @@ class BackupJobStorageModuleSecretInline(admin.TabularInline):
     model = BackupJobStorageModuleSecret
     extra = 1
 
+class BackupJobStorageModuleParameterInline(admin.TabularInline):
+    model = BackupJobStorageModuleParameter
+    extra = 1
+
 class BackupJobStorageModuleInline(admin.TabularInline):
     model = BackupJobStorageModule
     extra = 1
@@ -55,7 +59,7 @@ class BackupJobAdmin(admin.ModelAdmin):
 
 
 class BackupJobStorageModuleAdmin(admin.ModelAdmin):
-    inlines = (BackupJobStorageModuleSecretInline,)
+    inlines = (BackupJobStorageModuleSecretInline, BackupJobStorageModuleParameterInline)
 
 # Register your models here.
 admin.site.register(User, CustomUserAdmin)
@@ -72,3 +76,4 @@ admin.site.register(BackupJobStorageModule, BackupJobStorageModuleAdmin)
 admin.site.register(Secret)
 admin.site.register(BackupExecution)
 admin.site.register(StorageExecution)
+admin.site.register(Parameter)
