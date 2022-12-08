@@ -26,6 +26,22 @@ Run the `./setup.local.sh` file, to setup the database, and to create a root use
 
 For production setup use the `setup.prod.sh` script.
 
+After that you can run the application with
+```
+./docker-compose.local.sh up
+```
+
+or to run it in background you can use
+```
+./run.local.sh
+```
+
+## Tests
+Run the tests locally with the command
+```
+./manage.py.local.sh test
+```
+
 ## Debug with Intellij
 
 1. open the project as django project (with new project, django and so on)
@@ -39,7 +55,10 @@ If there is an error, when you debug the test, try to add the environment to you
 ```
 DJANGO_SETTINGS_MODULE=genericbackupy.settings.development;PYTHONUNBUFFERED=1
 ```
-where the DJANGO_SETTINGS_MODULE is specified
+where the DJANGO_SETTINGS_MODULE is specified.
+Also add the option `--no-input` to the option field, to prevent a stop if you restart the
+session, without django deleted the test-database. With this option, it will automatically delete
+the test database on start.
 
 ## Translations
 ### Create/Update lang file
