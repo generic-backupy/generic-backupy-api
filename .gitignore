@@ -209,6 +209,7 @@ app/*dump.json
 *.env
 django.env
 postgres.env
+redis.env
 *.crt
 *.key
 

@@ -16,10 +16,6 @@ class GBModule(BackupModule):
         self.log("check secrets and params ...")
         password = self.get_secret_with_name("password")
         if not password:
-            self.log(f"secrets in module {self.secrets}")
-            self.log(f"password {self.secrets[0].get('secret')}")
-            self.log(f"key {self.secrets[0].get('key')}")
-            self.log(f"type: {self.secrets[0].__name__}")
             return BackupResult.with_error("No password in secrets")
         host = self.get_param_with_name("host")
         if not host:

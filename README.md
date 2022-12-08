@@ -1,6 +1,31 @@
 # generic-backupy-api
 api for generic-backupy app
 
+## Setup the project
+Clone the project
+```
+git clone https://github.com/generic-backupy/generic-backupy-api.git
+cd generic-backupy-api
+```
+
+Copy the .env files manually or use the sh script `./setup-env.sh`
+```
+cp .env.example .env
+cp django.env.example django.env
+cp postgres.env.example postgres.env
+cp redis.env.example redis.env
+```
+
+Adjust the .env files to your needs (change the passwords for production!!!)
+If the port 8005 is already in use, pleas change the API_PORT in the .env file.
+
+Run the `./setup.local.py` file, to setup the database, and to create a root user.
+```
+./setup.local.py
+```
+
+For production setup use the `setup.prod.sh` script.
+
 ## Debug with Intellij
 
 1. open the project as django project (with new project, django and so on)

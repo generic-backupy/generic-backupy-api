@@ -51,8 +51,6 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
                 backup_execution.logs += message
             backup_execution.save()
         package_instance.log = backup_log
-        backup_log(f"secrets: {package_instance.secrets}")
-        backup_log(f"params: {package_instance.parameters}")
         # do backup and fetch response (which is a backup_result type)
         try:
             do_backup_response = package_instance.do_backup()

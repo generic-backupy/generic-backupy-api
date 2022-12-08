@@ -2,20 +2,11 @@ name: upload
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
   upload:
     runs-on: ubuntu-latest
     steps:
-    - name: upload
-      uses: garygrossgarten/github-action-ssh@release
-      with:
-        command: ${{ secrets.SSH_UPDATE_COMMAND }}
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD }}
-      env:
-        CI: true
+    - name: run the tests
+      run: ./manage.py.local test
