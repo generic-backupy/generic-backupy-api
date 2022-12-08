@@ -16,7 +16,6 @@ class GeneralUtilTest(TestCase):
 
     def test_g(self):
         # fill database
-        self.assertTrue(False) # just a short test for the github workflow :)
         secret = Secret.objects.create(name="TestSecret", secret="pssst")
         backup_job = BackupJob.objects.create(name="Test")
         backup_job_secret = BackupJobSecret.objects.create(backup_job=backup_job, secret=secret, key="password")
