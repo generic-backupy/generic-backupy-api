@@ -11,8 +11,8 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
     - name: setup env
-        run: ./setup-env.sh
-        shell: bash
+      run: ./setup-env.sh
+      shell: bash
     - name: run the tests
       run: ./manage.py.local.sh test
       shell: bash
