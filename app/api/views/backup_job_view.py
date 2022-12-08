@@ -14,7 +14,6 @@ from django.utils.translation import get_language as get_language
 import os
 import importlib.util
 import sys
-from api.rq_tasks.test import *
 from ..utils.backup_util import BackupUtil
 from ..utils.package_util import PackageUtil
 from django_rq import job

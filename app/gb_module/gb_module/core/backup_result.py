@@ -4,7 +4,8 @@ class BackupResult:
                  raw_backup=None,
                  backup_temp_location=None,
                  output=None,
-                 error=None):
+                 error=None,
+                 delete_path=None):
         # if the backup is small enough, to save it in this variable
         # (don't use it for big backups because of the RAM)
         self.raw_backup = raw_backup
@@ -14,3 +15,9 @@ class BackupResult:
         self.output = output
         # error
         self.error = error
+        # delete path, if it is set, this path should be deleted after the execution
+        self.delete_path = delete_path
+
+    @staticmethod
+    def with_error(error, output=None, delete_path=None):
+        return BackupResult(error=error, output=output, delete_path=delete_path)

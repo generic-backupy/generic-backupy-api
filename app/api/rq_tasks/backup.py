@@ -5,6 +5,7 @@ from api.models import Backup, BackupJob, BackupJobSecret, BackupJobStorageModul
 import time
 from django.utils.timezone import now
 
+from api.utils.backup_job_util import BackupJobUtil
 from api.utils.package_util import PackageUtil
 from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerializer, SystemGbModuleSerializer
 
@@ -31,8 +32,7 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
 
     if package_instance:
         # inject the secrets
-        backup_secrets = Secret.objects.filter(backup_job_secret_secret__backup_job=backup_job).distinct()
-        package_instance.secrets = SecretGbModuleSerializer(backup_secrets, many=True).data
+        package_instance.secrets = BackupJobUtil.parsed_secret_array(backup_job)
 
         # inject the params
         backup_parameters = Parameter.objects.filter(backup_job_parameter_parameter__backup_job=backup_job).distinct()

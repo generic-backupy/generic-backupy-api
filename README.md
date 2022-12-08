@@ -9,6 +9,12 @@ api for generic-backupy app
 4. Project-Structure, Module, add the details for django project (settings-file, manage file, etc)
 5. Edit Configuration, Django, Host 0.0.0.0 (not localhost!), Port 8000, Interpreter (the interpreter which we created in 3)
 
+### Debug Tests
+If there is an error, when you debug the test, try to add the environment to your Intellij runtime
+```
+DJANGO_SETTINGS_MODULE=genericbackupy.settings.development;PYTHONUNBUFFERED=1
+```
+where the DJANGO_SETTINGS_MODULE is specified
 
 ## Translations
 ### Create/Update lang file

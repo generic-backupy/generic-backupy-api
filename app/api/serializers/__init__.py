@@ -7,3 +7,4 @@ from .backup_job_serializer import *
 from .secret_serializer import *
 from .parameter_serializer import *
 from .system_serializer import *
+from .backup_job_secret_serializer import *

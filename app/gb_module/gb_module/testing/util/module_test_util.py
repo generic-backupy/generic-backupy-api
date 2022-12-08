@@ -7,7 +7,7 @@ class ModuleTestUtil:
     @staticmethod
     def create_secrets_password():
         return [
-            {'id': 1, 'name': "password", 'description': None, 'secret': "1234"}
+            {'id': 1, 'name': "password", 'key': 'password', 'description': None, 'secret': "1234"}
         ]
 
     @staticmethod

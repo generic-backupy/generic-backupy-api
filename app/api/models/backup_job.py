@@ -41,6 +41,7 @@ class BackupJob(BaseModel):
 class BackupJobSecret(BaseModel):
     backup_job = models.ForeignKey(BackupJob, on_delete=models.CASCADE, related_name="backup_job_secret_backup_job")
     secret = models.ForeignKey('Secret', on_delete=models.CASCADE, related_name="backup_job_secret_secret")
+    key = models.TextField(default="")
 
     def __str__(self):
         return f"{self.id} - {self.backup_job.name}/{self.secret.name}"
