@@ -11,4 +11,5 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
     - name: run the tests
-      run: ./manage.py.local test
+      run: ./manage.py.local.sh test
+      shell: bash
