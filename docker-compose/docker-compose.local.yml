@@ -15,7 +15,6 @@ services:
     image: bitnami/redis:7.0
     user: "${UID}:${GID}"
     env_file:
-      - ../.env
       - ../redis.env
     ports:
       - ${REDIS_PORT}:6379
@@ -28,7 +27,6 @@ services:
     image: postgres:14.5
     container_name: generic-backupy-api-db-local
     env_file:
-      - ../.env
       - ../postgres.env
     ports:
       - ${POSTGRES_PORT}:5432
@@ -46,7 +44,6 @@ services:
       - ../app:/code
       - ../redis:/redis
     env_file:
-      - ../.env
       - ../postgres.env
       - ../django.env
       - ../redis.env
@@ -70,7 +67,6 @@ services:
       - ../app:/code
       - ../backup_temp:/backup_temp
     env_file:
-      - ../.env
       - ../postgres.env
       - ../django.env
       - ../redis.env
