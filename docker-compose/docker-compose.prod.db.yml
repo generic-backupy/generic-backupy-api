@@ -22,6 +22,6 @@ services:
     restart: always
     command: postgres -c ssl=on -c ssl_cert_file=/var/lib/postgresql/server.crt -c ssl_key_file=/var/lib/postgresql/server.key
     ports:
-      - ${POSTGRES_PORT}:5432
+      - ${POSTGRES_MAPPING_PORT}:5432
     networks:
       - generic-backupy-db-network

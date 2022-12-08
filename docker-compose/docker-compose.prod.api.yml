@@ -20,6 +20,6 @@ services:
       - ../django.env
     command: uwsgi --http "0.0.0.0:8001" --module genericbackupy.wsgi --master --processes ${UWSGI_PROCESSES} --threads ${UWSGI_THREADS} --check-static /code/genericbackupy/
     ports:
-      - ${API_PORT}:8001
+      - ${API_MAPPING_PORT}:8001
     networks:
       - generic-backupy-api-network
