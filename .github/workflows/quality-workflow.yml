@@ -1,4 +1,4 @@
-name: upload
+name: quality
 
 on:
   push:
@@ -8,5 +8,7 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     steps:
+    - name: Check out code
+      uses: actions/checkout@v2
     - name: run the tests
       run: ./manage.py.local test
