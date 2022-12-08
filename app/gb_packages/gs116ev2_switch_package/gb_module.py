@@ -6,7 +6,7 @@ import hmac
 import os
 import shutil
 
-from gs116ev2_switch_package.utils.backup_fetcher import BackupFetcher
+from gb_packages.gs116ev2_switch_package.utils.backup_fetcher import BackupFetcher
 
 
 class GBModule(BackupModule):
