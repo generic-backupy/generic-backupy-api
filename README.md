@@ -19,9 +19,9 @@ cp redis.env.example redis.env
 Adjust the .env files to your needs (change the passwords for production!!!)
 If the port 8005 is already in use, pleas change the API_PORT in the .env file.
 
-Run the `./setup.local.py` file, to setup the database, and to create a root user.
+Run the `./setup.local.sh` file, to setup the database, and to create a root user.
 ```
-./setup.local.py
+./setup.local.sh
 ```
 
 For production setup use the `setup.prod.sh` script.
