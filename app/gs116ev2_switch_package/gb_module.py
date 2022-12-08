@@ -13,14 +13,20 @@ class GBModule(BackupModule):
 
     def do_backup(self):
         # check secrets and params
+        self.log("check secrets and params ...")
         password = self.get_secret_with_name("password")
         if not password:
+            self.log(f"secrets in module {self.secrets}")
+            self.log(f"password {self.secrets[0].get('secret')}")
+            self.log(f"key {self.secrets[0].get('key')}")
+            self.log(f"type: {self.secrets[0].__name__}")
             return BackupResult.with_error("No password in secrets")
         host = self.get_param_with_name("host")
         if not host:
             return BackupResult.with_error("No host in parameters")
 
         # create temp_folder
+        self.log("create temp folder ...")
         temp_folder = self.get_temp_folder_path("gs116ev2")
         if os.path.exists(temp_folder):
             shutil.rmtree(temp_folder, ignore_errors=True)
@@ -28,13 +34,16 @@ class GBModule(BackupModule):
 
         # do the backup
         # TODO: outsource it to a function variable to have the opportunity to change the function to a mock alternative
+        self.log("do backup ...")
         BackupFetcher.fetch_backup(temp_folder, host, password)
 
         # check the backup and return
+        self.log("check backup")
         file_path = str(Path(temp_folder).joinpath("GS116Ev2.cfg"))
         if not os.path.exists(file_path):
             return BackupResult.with_error("Error at download process!", delete_path=temp_folder)
 
+        self.log("backup was successful")
         return BackupResult(backup_temp_location=file_path, delete_path=temp_folder)
 
     """

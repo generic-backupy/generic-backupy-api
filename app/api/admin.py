@@ -54,8 +54,12 @@ class BackupJobSecretInline(admin.TabularInline):
     model = BackupJobSecret
     extra = 1
 
+class BackupJobParameterInline(admin.TabularInline):
+    model = BackupJobParameter
+    extra = 1
+
 class BackupJobAdmin(admin.ModelAdmin):
-    inlines = (BackupJobSecretInline, BackupJobStorageModuleInline)
+    inlines = (BackupJobSecretInline, BackupJobParameterInline, BackupJobStorageModuleInline)
 
 
 class BackupJobStorageModuleAdmin(admin.ModelAdmin):

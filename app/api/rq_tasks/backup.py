@@ -36,7 +36,7 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
 
         # inject the params
         backup_parameters = Parameter.objects.filter(backup_job_parameter_parameter__backup_job=backup_job).distinct()
-        package_instance.parameters = ParameterGbModuleSerializer(backup_parameters, many=True).data
+        package_instance.parameters = [dict(d) for d in ParameterGbModuleSerializer(backup_parameters, many=True).data]
 
         # inject the system
         package_instance.system = system_dict
@@ -51,7 +51,8 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
                 backup_execution.logs += message
             backup_execution.save()
         package_instance.log = backup_log
-
+        backup_log(f"secrets: {package_instance.secrets}")
+        backup_log(f"params: {package_instance.parameters}")
         # do backup and fetch response (which is a backup_result type)
         try:
             do_backup_response = package_instance.do_backup()
@@ -99,13 +100,13 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
             storage_secrets = Secret.objects.filter(
                 backup_job_storage_model_secret_secret__backup_job_storage_module=storage_module_pivot
             ).distinct()
-            storage_package_instance.secrets = SecretGbModuleSerializer(storage_secrets, many=True).data
+            storage_package_instance.secrets = [dict(d) for d in SecretGbModuleSerializer(storage_secrets, many=True).data]
 
             # inject the params
             storage_parameters = Parameter.objects.filter(
                 backup_job_storage_model_parameter_parameter__backup_job_storage_module=storage_module_pivot
             ).distinct()
-            storage_package_instance.parameters = ParameterGbModuleSerializer(storage_parameters, many=True).data
+            storage_package_instance.parameters = [dict(d) for d in ParameterGbModuleSerializer(storage_parameters, many=True).data]
 
             # inject the system
             storage_package_instance.system = system_dict

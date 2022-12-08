@@ -68,6 +68,7 @@ services:
         condition: on-failure
     volumes:
       - ../app:/code
+      - ../backup_temp:/backup_temp
     env_file:
       - ../.env
       - ../postgres.env
