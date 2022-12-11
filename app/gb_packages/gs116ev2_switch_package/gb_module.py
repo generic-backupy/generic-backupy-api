@@ -20,10 +20,16 @@ class GBModule(BackupModule):
         host = self.get_param_with_name("host")
         if not host:
             return BackupResult.with_error("No host in parameters")
+        switch_type = self.get_param_with_name("switch_type") or "GS116Ev2"
+        login_input_id = self.get_param_with_name("login_input_id") or "passwordtmp"
+        login_button_id = self.get_param_with_name("login_button_id") or "btnApply"
+        backup_endpoint = self.get_param_with_name("backup_endpoint") or f"{switch_type}.cfg"
+        if (backup_endpoint.startswith("/")):
+            backup_endpoint = backup_endpoint[1:]
 
         # create temp_folder
         self.log("create temp folder ...")
-        temp_folder = self.get_temp_folder_path("gs116ev2")
+        temp_folder = self.get_temp_folder_path(switch_type)
         if os.path.exists(temp_folder):
             shutil.rmtree(temp_folder, ignore_errors=True)
         os.mkdir(temp_folder)
@@ -31,11 +37,11 @@ class GBModule(BackupModule):
         # do the backup
         # TODO: outsource it to a function variable to have the opportunity to change the function to a mock alternative
         self.log("do backup ...")
-        BackupFetcher.fetch_backup(temp_folder, host, password)
+        BackupFetcher.fetch_backup(temp_folder, host, password, switch_type, login_input_id, login_button_id, backup_endpoint)
 
         # check the backup and return
         self.log("check backup")
-        file_path = str(Path(temp_folder).joinpath("GS116Ev2.cfg"))
+        file_path = str(Path(temp_folder).joinpath(f"{switch_type}.cfg"))
         if not os.path.exists(file_path):
             return BackupResult.with_error("Error at download process!", delete_path=temp_folder)
 
