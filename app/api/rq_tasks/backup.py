@@ -95,10 +95,7 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
 
         if storage_package_instance:
             # inject the secrets
-            storage_secrets = Secret.objects.filter(
-                backup_job_storage_model_secret_secret__backup_job_storage_module=storage_module_pivot
-            ).distinct()
-            storage_package_instance.secrets = [dict(d) for d in SecretGbModuleSerializer(storage_secrets, many=True).data]
+            storage_package_instance.secrets = BackupJobUtil.parsed_storage_secret_array(storage_module_pivot)
 
             # inject the params
             storage_parameters = Parameter.objects.filter(

@@ -24,6 +24,7 @@ class Backup(BaseModel):
                                    on_delete=models.CASCADE,
                                    null=True)
     path = models.TextField(null=True, blank=True)
+    original_file_name = models.TextField(null=True, blank=True)
     backup_job = models.ForeignKey('BackupJob', null=True, on_delete=models.SET_NULL,
                                blank=True, related_name='backup_category')
     backup_module = models.ForeignKey('BackupModule', null=True, on_delete=models.SET_NULL,

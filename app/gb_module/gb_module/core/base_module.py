@@ -77,8 +77,8 @@ class BaseModule:
     normalize a name to get a valid file_name out of it
     TODO: remove not allowed characters
     """
-    def get_backup_file_name(self, name=None):
-        backup_name = f"{name or self.backup_job.get('name')}_{self.get_current_datetime_str()}.bk"
+    def get_backup_file_name(self, name=None, suffix=".bk"):
+        backup_name = f"{name or self.backup_job.get('name')}_{self.get_current_datetime_str()}{suffix}"
         backup_name = backup_name.replace(" ", "_")
         backup_name = re.sub('(?<!^)(?=[A-Z])', '_', backup_name).lower()
         return backup_name

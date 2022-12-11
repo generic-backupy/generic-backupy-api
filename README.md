@@ -94,3 +94,11 @@ Navigate to the redis folder, and execute the `generate-tls-files.sh` script.
 cd /redis
 ./generate-tls-files.sh
 ```
+
+### Tips
+
+## docker container uses ip address of the local network range
+This can happen, if there are two much docker networks, or if the network range is configured for the
+range of the local network.
+
+For the first case execute `docker network prune` and restart the containers (down and up)

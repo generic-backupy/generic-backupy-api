@@ -71,6 +71,7 @@ class BackupJobStorageModuleSecret(BaseModel):
     backup_job_storage_module = models.ForeignKey(BackupJobStorageModule,
                                                   on_delete=models.CASCADE,
                                                   related_name="backup_job_storage_module_secret_backup_job_storage_module")
+    key = models.TextField(default="")
     secret = models.ForeignKey('Secret', on_delete=models.CASCADE, related_name="backup_job_storage_model_secret_secret")
 
     def __str__(self):
