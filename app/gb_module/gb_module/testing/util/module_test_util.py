@@ -11,10 +11,18 @@ class ModuleTestUtil:
         ]
 
     @staticmethod
+    def create_secret(key, value, name=None, s_id=1, description=None):
+        return {'id': s_id, 'name': name or key, 'key': key, 'description': description, 'secret': value}
+
+    @staticmethod
     def create_parameters_path(path="/backups/default"):
         return [
             {'id': 1, 'name': "default path parameter", 'description': None, 'parameter': {"path": path}}
         ]
+
+    @staticmethod
+    def create_parameter(key, value, name=None, p_id=1, description=None):
+        return {'id': p_id, 'name': name or key, 'description': description, 'parameter': {key: value}}
 
     @staticmethod
     def create_system_testsystem():

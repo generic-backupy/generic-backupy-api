@@ -30,6 +30,10 @@ class GeneralTest(TestCase):
         # enter the real credentials
         self.module.secrets.append({'name': 'test', 'key': 'password', 'secret': ''})
         self.module.parameters.append({'parameter': {'host': ''}})
+        self.module.parameters.append(ModuleTestUtil.create_parameter("switch_type", "GS305E"))
+        self.module.parameters.append(ModuleTestUtil.create_parameter("login_input_id", "password"))
+        self.module.parameters.append(ModuleTestUtil.create_parameter("login_button_id", "loginBtn"))
+        self.module.parameters.append(ModuleTestUtil.create_parameter("backup_endpoint", "backup_conf.cgi?cmd=backup_conf"))
         
         # run the test
         response = self.module.do_backup()
