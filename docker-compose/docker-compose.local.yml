@@ -43,6 +43,7 @@ services:
     volumes:
       - ../app:/code
       - ../redis:/redis
+      - ../debug_temp:/debug_temp
     env_file:
       - ../postgres.env
       - ../django.env
@@ -60,12 +61,13 @@ services:
       dockerfile: docker/python/Dockerfile
     image: generic-backupy/api
     deploy:
-      replicas: 5
+      replicas: 1
       restart_policy:
         condition: on-failure
     volumes:
       - ../app:/code
       - ../backup_temp:/backup_temp
+      - ../debug_temp:/debug_temp
     env_file:
       - ../postgres.env
       - ../django.env

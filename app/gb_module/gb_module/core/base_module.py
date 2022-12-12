@@ -57,6 +57,22 @@ class BaseModule:
                     return parameter.get(param_name)
         return None
 
+        """
+    Returns a input with a given name, if it exists.
+    A input will be fetched of all params, secrets, and system properties (like host)
+    params overrides system, and secrets overrides system and params
+    Otherwise it returns None
+    """
+    def get_input_with_name(self, param_name):
+        # fetch from system
+        value = (self.system or {}).get(param_name)
+        # or params
+        value = self.get_param_with_name(param_name) or value
+        # or secrets
+        value = self.get_secret_with_name(param_name) or value
+
+        return value
+
     """
     Returns a current datetime string with a format
     """
