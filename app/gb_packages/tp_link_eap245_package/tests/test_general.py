@@ -26,7 +26,7 @@ class GeneralTest(TestCase):
 
 
     # TODO: add mock BackupFetcher
-    def test_real_device(self):
+"""   def test_real_device(self):
         # enter the real credentials
         self.module.secrets.append({'name': 'test', 'key': 'password', 'secret': ''})
         self.module.secrets.append({'name': 'test', 'key': 'username', 'secret': ''})
@@ -36,4 +36,4 @@ class GeneralTest(TestCase):
         response = self.module.do_backup()
         self.assertIsNone(response.error)
         self.assertIsNotNone(response.backup_temp_location, "Response should contains a backup_temp_location")
-
+"""
