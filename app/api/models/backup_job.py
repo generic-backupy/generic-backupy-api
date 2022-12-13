@@ -24,6 +24,8 @@ class BackupJob(BaseModel):
     # secrets which should be injected to the backup module
     backup_module_secrets = models.ManyToManyField('Secret', through="BackupJobSecret", related_name="backup_job_secret")
     backup_module_parameters = models.ManyToManyField('Parameter', through="BackupJobParameter", related_name="backup_job_parameter")
+    # to input a dict, without to need to create a whole parameter database entry
+    backup_module_direct_parameters = models.JSONField(default=None, null=True, blank=True)
     # TODO: also add default encryption feature for modules (in the BaseModule) to make it easy to encrypt backups
     #   use encryption_secret from pivot table to activate the encryption feature, and use this secret as enc key
     # because there are multiple storage_modules, we get multiple backup objects. One for each storage module (because of different paths, etc.)
@@ -60,6 +62,8 @@ class BackupJobStorageModule(BaseModel):
     storage_module = models.ForeignKey('StorageModule', on_delete=models.CASCADE, related_name="backup_job_storage_module_storage_module")
     secrets = models.ManyToManyField('Secret', through="BackupJobStorageModuleSecret", related_name="backup_job_storage_module_secret")
     parameters = models.ManyToManyField('Parameter', through="BackupJobStorageModuleParameter", related_name="backup_job_storage_module_parameter")
+    # to input a dict, without to need to create a whole parameter database entry
+    direct_parameters = models.JSONField(default=None, null=True, blank=True)
     encryption_secret = models.ForeignKey('Secret', null=True, blank=True,
                                           on_delete=models.SET_NULL, related_name="backup_job_storage_module_encryption_secret")
 

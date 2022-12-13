@@ -37,6 +37,9 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
         # inject the params
         package_instance.parameters = BackupJobUtil.parsed_parameter_dict(backup_job)
 
+        # inject direct params
+        package_instance.parameters |= backup_job.backup_module_direct_parameters or {}
+
         # inject the system
         package_instance.system = system_dict
 
@@ -98,6 +101,9 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
 
             # inject the params
             storage_package_instance.parameters = BackupJobUtil.parsed_storage_parameter_dict(storage_module_pivot)
+
+            # inject direct params
+            storage_package_instance.parameters |= storage_module_pivot.direct_parameters or {}
 
             # inject the system
             storage_package_instance.system = system_dict
