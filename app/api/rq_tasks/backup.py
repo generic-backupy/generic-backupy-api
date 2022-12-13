@@ -32,11 +32,10 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
 
     if package_instance:
         # inject the secrets
-        package_instance.secrets = BackupJobUtil.parsed_secret_array(backup_job)
+        package_instance.secrets = BackupJobUtil.parsed_secret_dict(backup_job)
 
         # inject the params
-        backup_parameters = Parameter.objects.filter(backup_job_parameter_parameter__backup_job=backup_job).distinct()
-        package_instance.parameters = [dict(d) for d in ParameterGbModuleSerializer(backup_parameters, many=True).data]
+        package_instance.parameters = BackupJobUtil.parsed_parameter_dict(backup_job)
 
         # inject the system
         package_instance.system = system_dict
@@ -95,13 +94,10 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
 
         if storage_package_instance:
             # inject the secrets
-            storage_package_instance.secrets = BackupJobUtil.parsed_storage_secret_array(storage_module_pivot)
+            storage_package_instance.secrets = BackupJobUtil.parsed_storage_secret_dict(storage_module_pivot)
 
             # inject the params
-            storage_parameters = Parameter.objects.filter(
-                backup_job_storage_model_parameter_parameter__backup_job_storage_module=storage_module_pivot
-            ).distinct()
-            storage_package_instance.parameters = [dict(d) for d in ParameterGbModuleSerializer(storage_parameters, many=True).data]
+            storage_package_instance.parameters = BackupJobUtil.parsed_storage_parameter_dict(storage_module_pivot)
 
             # inject the system
             storage_package_instance.system = system_dict
