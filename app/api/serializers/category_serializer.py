@@ -2,10 +2,21 @@ from ..models import category
 from rest_framework import serializers
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategoryPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = category
         fields = ('id', 'name', 'description', 'parent')
+
+
+class CategoryRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = category
+        fields = ('id', 'name', 'description', 'parent')
+
+class CategoryListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = category
+        fields = ('id', 'name', 'description')
 
 
 class CategoryShortSerializer(serializers.ModelSerializer):
