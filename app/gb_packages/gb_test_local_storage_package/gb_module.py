@@ -8,7 +8,7 @@ class GBModule(StorageModule):
     def save_to_storage(self, backup_result: BackupResult):
         # check if we have a path
         self.log(f"check path ...")
-        path = self.get_param_with_name('path')
+        path = self.get_input_with_name('path')
         if not path:
             return StorageResult.with_error("No path was provided!")
 

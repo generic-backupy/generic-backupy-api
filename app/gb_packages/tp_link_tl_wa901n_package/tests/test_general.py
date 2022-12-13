@@ -9,8 +9,6 @@ class GeneralTest(TestCase):
 
     def setUp(self):
         self.module = ModuleTestUtil.create_default_module(GBModule)
-        self.module.secrets.append({'name': 'test', 'key': 'password', 'secret': '1234'})
-        self.module.parameters.append({'parameter': {'host': '0.0.0.0'}})
 
     def test_module_creation(self):
         self.assertIsNotNone(self.module, "Object is not allowed to be None")
@@ -20,13 +18,18 @@ class GeneralTest(TestCase):
         response = self.module.do_backup()
         self.assertIsNotNone(response.error, "Response should contains a no password error")
 
-    def test_real_device(self):
+    def test_no_host(self):
+        self.module.system["host"] = None
+        response = self.module.do_backup()
+        self.assertIsNotNone(response.error, "Response should contains a no password error")
+    # TODO: outsource this real tests to an own class, where we can execute these things manually with password input (or fetch it from .env
+    """def test_real_device(self):
         # enter the real credentials
-        self.module.secrets.append({'name': 'test', 'key': 'password', 'secret': ''})
-        self.module.parameters.append({'parameter': {'host': ''}})
+        self.module.secrets |= {'password': ''}
+        self.module.parameters |= {'host': ''}
         
         # run the test
         response = self.module.do_backup()
         self.assertIsNone(response.error)
         self.assertIsNotNone(response.backup_temp_location, "Response should contains a backup_temp_location")
-
+"""

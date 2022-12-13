@@ -5,26 +5,6 @@ class ModuleTestUtil:
         return module_class()
 
     @staticmethod
-    def create_secrets_password():
-        return [
-            {'id': 1, 'name': "password", 'key': 'password', 'description': None, 'secret': "1234"}
-        ]
-
-    @staticmethod
-    def create_secret(key, value, name=None, s_id=1, description=None):
-        return {'id': s_id, 'name': name or key, 'key': key, 'description': description, 'secret': value}
-
-    @staticmethod
-    def create_parameters_path(path="/backups/default"):
-        return [
-            {'id': 1, 'name': "default path parameter", 'description': None, 'parameter': {"path": path}}
-        ]
-
-    @staticmethod
-    def create_parameter(key, value, name=None, p_id=1, description=None):
-        return {'id': p_id, 'name': name or key, 'description': description, 'parameter': {key: value}}
-
-    @staticmethod
     def create_system_testsystem():
         return {'id': 1, 'name': "Testsystem", 'description': None, 'host': "localhost", 'additional_information': None}
 
@@ -40,20 +20,18 @@ class ModuleTestUtil:
         return storage_log
 
     @staticmethod
-    def create_storage_module(module_class, path="/default"):
-        module = ModuleTestUtil.create_module(module_class)
-        module.secrets = ModuleTestUtil.create_secrets_password()
-        module.parameters = ModuleTestUtil.create_parameters_path(path=path)
-        module.system = ModuleTestUtil.create_system_testsystem()
-        module.backup_job = ModuleTestUtil.create_backup_job()
-        module.log = ModuleTestUtil.create_default_logging_function()
+    def create_storage_module(module_class, default_path="/default"):
+        module = ModuleTestUtil.create_default_module(module_class)
+        module.parameters |= {"path": default_path}
         return module
 
     @staticmethod
     def create_default_module(module_class):
         module = ModuleTestUtil.create_module(module_class)
-        module.secrets = ModuleTestUtil.create_secrets_password()
-        module.parameters = ModuleTestUtil.create_parameters_path()
+        module.secrets = {
+            "password": "1234"
+        }
+        module.parameters = {}
         module.system = ModuleTestUtil.create_system_testsystem()
         module.backup_job = ModuleTestUtil.create_backup_job()
         module.log = ModuleTestUtil.create_default_logging_function()

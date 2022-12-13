@@ -4,8 +4,8 @@ from gb_module.gb_module.core.storage_module import StorageModule
 from gb_module.gb_module.core.backup_result import BackupResult
 from gb_module.gb_module.core.storage_result import StorageResult
 from pathlib import Path
-import shutil
 import subprocess
+
 
 class GBModule(StorageModule):
     def create_private_key_file(self, private_key, temp_folder):
@@ -26,31 +26,24 @@ class GBModule(StorageModule):
     def save_to_storage(self, backup_result: BackupResult):
         # check if we have a path
         self.log(f"check inputs ...")
-        path = self.get_param_with_name('path')
-        if not path:
-            return StorageResult.with_error("No path was provided!")
+        try:
+            path = self.get_input_with_name_or_die('path')
+            port = str(self.get_input_with_name('port') or 22)
+            private_key = self.get_input_with_name('private_key')
+            username = self.get_input_with_name_or_die('username')
+            host = self.get_input_with_name_or_die('host')
+        except Exception as e:
+            return BackupResult.with_error(f"input-error: {e}")
 
-        port = str(self.get_param_with_name('port') or 22)
-        private_key = self.get_secret_with_name('private_key')
-        private_key_path = None
-        username = self.get_param_with_name('username')
-        host = self.get_param_with_name('host')
-        self.log(f"host: {host}")
         backup_file_location = backup_result.backup_temp_location
         backup_file_name = self.get_backup_file_name("backup")
         backup_file_path = str(Path(path).joinpath(backup_file_name))
 
-        self.log(f"backup_file_path {backup_file_location}")
         self.log("create temp folder ...")
-        temp_folder = self.get_temp_folder_path("scp_module")
-        os.mkdir(temp_folder)
-
-        if not username:
-            return StorageResult.with_error("No username was provided!")
-
-        if not host:
-            return StorageResult.with_error("No host was provided from system!")
-
+        try:
+            temp_folder = self.create_temp_folder("scp_module")
+        except Exception as e:
+            return BackupResult.with_error(f"temp-folder-creation-error: {e}")
 
         private_key, private_key_path = self.create_private_key_file(private_key, temp_folder)
 
@@ -80,7 +73,7 @@ class GBModule(StorageModule):
             error = f"error at storing process on server: {result.stderr.decode()}"
 
         self.log("cleanup created folders and files ...")
-        #shutil.rmtree(temp_folder, ignore_errors=True)
+        # shutil.rmtree(temp_folder, ignore_errors=True)
 
         if error:
             return StorageResult.with_error(error)

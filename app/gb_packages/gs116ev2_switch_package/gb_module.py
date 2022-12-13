@@ -4,7 +4,6 @@ from gb_module.gb_module.core.backup_module import BackupModule
 from gb_module.gb_module.core.backup_result import BackupResult
 import hmac
 import os
-import shutil
 
 from gb_packages.gs116ev2_switch_package.utils.backup_fetcher import BackupFetcher
 
@@ -14,34 +13,44 @@ class GBModule(BackupModule):
     def do_backup(self):
         # check secrets and params
         self.log("check secrets and params ...")
-        password = self.get_secret_with_name("password")
-        if not password:
-            return BackupResult.with_error("No password in secrets")
-        host = self.get_param_with_name("host")
-        if not host:
-            return BackupResult.with_error("No host in parameters")
-        switch_type = self.get_param_with_name("switch_type") or "GS116Ev2"
-        login_input_id = self.get_param_with_name("login_input_id") or "passwordtmp"
-        login_button_id = self.get_param_with_name("login_button_id") or "btnApply"
-        backup_endpoint = self.get_param_with_name("backup_endpoint") or f"{switch_type}.cfg"
-        if (backup_endpoint.startswith("/")):
-            backup_endpoint = backup_endpoint[1:]
+        try:
+            password = self.get_input_with_name_or_die("password")
+            host = self.get_input_with_name_or_die("host")
+            protocol = self.get_input_with_name("protocol") or "http"
+            timeout = self.get_input_with_name("timeout") or 60
+            switch_type = self.get_input_with_name("switch_type") or "GS116Ev2"
+            login_input_id = self.get_input_with_name("login_input_id") or "passwordtmp"
+            login_button_id = self.get_input_with_name("login_button_id") or "btnApply"
+            backup_endpoint = self.get_input_with_name("backup_endpoint") or f"{switch_type}.cfg"
+            if backup_endpoint.startswith("/"):
+                backup_endpoint = backup_endpoint[1:]
+        except Exception as e:
+            return BackupResult.with_error(f"input-error: {e}")
 
         # create temp_folder
         self.log("create temp folder ...")
-        temp_folder = self.get_temp_folder_path(switch_type)
-        if os.path.exists(temp_folder):
-            shutil.rmtree(temp_folder, ignore_errors=True)
-        os.mkdir(temp_folder)
+        try:
+            temp_folder = self.create_temp_folder(switch_type)
+        except Exception as e:
+            return BackupResult.with_error(f"temp-folder-creation-error: {e}")
 
         # do the backup
-        # TODO: outsource it to a function variable to have the opportunity to change the function to a mock alternative
         self.log("do backup ...")
-        BackupFetcher.fetch_backup(temp_folder, host, password, switch_type, login_input_id, login_button_id, backup_endpoint)
+        try:
+            BackupFetcher.fetch_backup(temp_folder, host, password, switch_type,
+                                       login_input_id, login_button_id,
+                                       backup_endpoint, protocol=protocol,
+                                       timeout=timeout
+                                       )
+        except Exception as e:
+            return BackupResult.with_error(f"Error at fetching: {e}", delete_path=temp_folder)
 
         # check the backup and return
         self.log("check backup")
-        file_path = str(Path(temp_folder).joinpath(f"{switch_type}.cfg"))
+        try:
+            file_path = self.get_file_path_in_folder(temp_folder, f"{switch_type}.cfg")
+        except Exception as e:
+            return BackupResult.with_error(f"Error at checking file-path: {e}", delete_path=temp_folder)
         if not os.path.exists(file_path):
             return BackupResult.with_error("Error at download process!", delete_path=temp_folder)
 

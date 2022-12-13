@@ -12,7 +12,7 @@ class GBModule(BackupModule):
         try:
             password = self.get_input_with_name_or_die("password")
             host = self.get_input_with_name_or_die("host")
-            ap_type = self.get_param_with_name("ap_type") or "TL-WA901N"
+            ap_type = self.get_input_with_name("ap_type") or "TL-WA901N"
         except Exception as e:
             return BackupResult.with_error(f"input-error: {e}")
 
