@@ -1,13 +1,9 @@
 from unittest import TestCase
-from django.utils import timezone
 
 from gb_module.gb_module.testing.util.module_test_util import ModuleTestUtil
-from gb_module.gb_module.testing.util.backup_result_test_util import *
 from ..gb_module import *
-import os
-import shutil
 
-# models test
+
 class GeneralTest(TestCase):
     module: GBModule = None
 
@@ -24,8 +20,6 @@ class GeneralTest(TestCase):
         response = self.module.do_backup()
         self.assertIsNotNone(response.error, "Response should contains a no password error")
 
-
-    """
     def test_real_device(self):
         # enter the real credentials
         self.module.secrets.append({'name': 'test', 'key': 'password', 'secret': ''})
@@ -35,4 +29,4 @@ class GeneralTest(TestCase):
         response = self.module.do_backup()
         self.assertIsNone(response.error)
         self.assertIsNotNone(response.backup_temp_location, "Response should contains a backup_temp_location")
-"""
+

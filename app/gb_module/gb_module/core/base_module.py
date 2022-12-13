@@ -2,7 +2,7 @@ from datetime import datetime
 import re
 import os
 from pathlib import Path
-
+import shutil
 
 class BaseModule:
 
@@ -74,6 +74,15 @@ class BaseModule:
         return value
 
     """
+   Returns the input, or raise an exception, if the input isn't available
+   """
+    def get_input_with_name_or_die(self, param_name):
+        value = self.get_input_with_name(param_name)
+        if not value:
+            raise Exception(f"{param_name} not specified!")
+        return value
+
+    """
     Returns a current datetime string with a format
     """
     def get_current_datetime_str(self, date_time=None, dt_format="%y_%m_%d__%H_%M_%S_%f"):
@@ -109,3 +118,21 @@ class BaseModule:
 
     def get_temp_folder_path(self, name=None):
         return str(Path(self.temp_path).joinpath(self.get_temp_folder_name(name)))
+
+    def create_temp_folder(self, name):
+        temp_folder = self.get_temp_folder_path(name)
+        if os.path.exists(temp_folder):
+            shutil.rmtree(temp_folder, ignore_errors=True)
+        os.mkdir(temp_folder)
+        return temp_folder
+
+    def get_file_path_in_folder(self, temp_folder, file_name=None):
+        file_path = None
+        listdir = os.listdir(temp_folder)
+        if len(listdir) > 0:
+            if file_name and os.path.exists(Path(temp_folder).joinpath(file_name)):
+                file_path = os.path.exists(Path(temp_folder).joinpath(file_name))
+            else:
+                file_path = str(Path(temp_folder).joinpath(listdir[0]))
+
+        return file_path
