@@ -1,3 +1,4 @@
+from api.models import BackupExecution, StorageExecution, Backup, System, BackupJob
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -13,4 +14,10 @@ class PageViewSet(BaseViewSet):
 
     @action(detail=False, methods=['get'], url_path='home')
     def home(self, request, *args, **kwargs):
-        return Response()
+        page_json = {}
+        page_json["latest-backup-jobs"] = BackupExecution.objects.all()[:5]
+        page_json["latest-storage-jobs"] = StorageExecution.objects.all()[:5]
+        page_json["latest-backups"] = Backup.objects.all()[:5]
+        page_json["systems"] = System.objects.all()[:5]
+        page_json["backup-jobs"] = BackupJob.objects.all()[:5]
+        return Response(page_json)
