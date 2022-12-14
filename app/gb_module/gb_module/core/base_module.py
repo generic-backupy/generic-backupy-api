@@ -141,7 +141,7 @@ class BaseModule:
         listdir = os.listdir(temp_folder)
         if len(listdir) > 0:
             if file_name and os.path.exists(Path(temp_folder).joinpath(file_name)):
-                file_path = os.path.exists(Path(temp_folder).joinpath(file_name))
+                file_path = Path(temp_folder).joinpath(file_name)
             else:
                 file_path = str(Path(temp_folder).joinpath(listdir[0]))
 

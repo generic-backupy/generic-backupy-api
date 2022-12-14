@@ -63,7 +63,7 @@ class GBModule(StorageModule):
         error = None
         result = None
         try:
-            self.log(f"run {' '.join(scp_command)}")
+            self.log(f"run {' '.join([str(el) for el in scp_command])}")
             result = subprocess.run(scp_command, capture_output=True, input=b"yes")
         except Exception as exception:
             self.log(f"error at storing process: {exception}")
