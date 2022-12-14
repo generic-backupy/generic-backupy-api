@@ -54,7 +54,7 @@ class GBModule(BackupModule):
         if not os.path.exists(file_path):
             return BackupResult.with_error("Error at download process!", delete_path=temp_folder)
 
-        self.log("backup was successful")
+        self.log(f"backup was successful, and is stored with temp path {file_path}")
         return BackupResult(backup_temp_location=file_path, delete_path=temp_folder)
 
     """
