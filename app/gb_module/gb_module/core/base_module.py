@@ -146,3 +146,9 @@ class BaseModule:
                 file_path = str(Path(temp_folder).joinpath(listdir[0]))
 
         return file_path
+
+    """
+    get the host
+    """
+    def get_host(self):
+        return self.get_input_with_name("host")
