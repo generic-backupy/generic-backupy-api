@@ -5,8 +5,10 @@ from rest_framework.decorators import action
 
 from .base_view import BaseViewSet
 from rest_framework.response import Response
-
-
+from ..serializers.backup_execution_serializer import BackupExecutionListSerializer
+from ..serializers.storage_execution_serializer import StorageExecutionListSerializer
+from ..serializers.backup_job_serializer import BackupJobListSerializer
+from ..serializers.system_serializer import SystemListSerializer
 
 class PageViewSet(BaseViewSet):
     serializer_class = None
@@ -15,9 +17,8 @@ class PageViewSet(BaseViewSet):
     @action(detail=False, methods=['get'], url_path='home')
     def home(self, request, *args, **kwargs):
         page_json = {}
-        page_json["latest-backup-jobs"] = BackupExecution.objects.all()[:5]
-        page_json["latest-storage-jobs"] = StorageExecution.objects.all()[:5]
-        page_json["latest-backups"] = Backup.objects.all()[:5]
-        page_json["systems"] = System.objects.all()[:5]
-        page_json["backup-jobs"] = BackupJob.objects.all()[:5]
+        page_json["backup_jobs"] = BackupJobListSerializer(BackupJob.objects.all()[:5], many=True).data
+        page_json["systems"] = SystemListSerializer(System.objects.all()[:5], many=True).data
+        page_json["latest_backup_executions"] = BackupExecutionListSerializer(BackupExecution.objects.all().order_by('-id')[:5], many=True).data
+        page_json["latest_storage_executions"] = StorageExecutionListSerializer(StorageExecution.objects.all().order_by('-id')[:5], many=True).data
         return Response(page_json)

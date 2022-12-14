@@ -26,4 +26,5 @@ class BackupUtil:
                             "There is no storage module specified for this job, "
                             "you need at least one storage module", status_code=400)
 
-        backup.delay(backup_job, backup_module, backup_job_storage_modules, user)
+        backup_execution = BackupExecution.objects.create(created_by=user, backup_job=backup_job, backup_module=backup_module)
+        backup.delay(backup_job, backup_module, backup_job_storage_modules, user, backup_execution)
