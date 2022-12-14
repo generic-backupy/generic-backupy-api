@@ -11,3 +11,5 @@ firebase-admin>=5.2.0,<5.3
 uwsgi>=2.0.20,<3.0
 django-rq>=2.6.0,<3.0
 selenium>=4.7.2,<5.0
+django-nose>=1.4.7,<2.0
+coverage>=6.5.0,<7.0

@@ -5,7 +5,6 @@ from ..models.push_token import PushToken
 
 class PushNotificationUtil:
 
-    #"ewI8Fweudkj6pPIh0Tz__a:APA91bFMOpqwZMBmNB6s3g30H3nJ2uzpSJf2uE2sLvU5VZabQEy3tItB6yrumQ5fInTYowv3MXJneFD_gbjXra9lhBDJ9_sqLgLfIcw0OmAZbyuXfP7wA8cN1BJkQKVfBXbyYitinofA"
     @staticmethod
     def sendSingleNotification(token):
         message = messaging.Message(notification=messaging.Notification(title="test", body="here"),

@@ -16,3 +16,8 @@ jobs:
     - name: run the tests
       run: ./manage.py.local.sh test
       shell: bash
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
