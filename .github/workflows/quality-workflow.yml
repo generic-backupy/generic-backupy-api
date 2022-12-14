@@ -14,7 +14,7 @@ jobs:
       run: ./setup-env.sh
       shell: bash
     - name: run the tests
-      run: ./manage.py.local.sh test && sed -i '' -e 's#/code#/app#g' app/coverage.xml
+      run: ./manage.py.local.sh test && ./normalize-coverage.sh
       shell: bash
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
