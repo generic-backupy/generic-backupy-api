@@ -3,6 +3,7 @@ from unittest import TestCase
 from gb_module.gb_module.testing.util.module_test_util import ModuleTestUtil
 from ..gb_module import *
 
+
 class GeneralTest(TestCase):
     module: GBModule = None
 
@@ -17,17 +18,15 @@ class GeneralTest(TestCase):
         response = self.module.do_backup()
         self.assertIsNotNone(response.error, "Response should contains a no password error")
 
-
+    def test_no_host(self):
+        self.module.system["host"] = None
+        response = self.module.do_backup()
+        self.assertIsNotNone(response.error, "Response should contains a no password error")
+    # TODO: outsource this real tests to an own class, where we can execute these things manually with password input (or fetch it from .env
     """def test_real_device(self):
         # enter the real credentials
         self.module.secrets |= {'password': ''}
-        self.module.parameters |= {
-            'host': '',
-            "switch_type": "GS305E",
-            "login_input_id": "password",
-            "login_button_id": "loginBtn",
-            "backup_endpoint": "backup_conf.cgi?cmd=backup_conf"
-        }
+        self.module.parameters |= {'host': ''}
         
         # run the test
         response = self.module.do_backup()

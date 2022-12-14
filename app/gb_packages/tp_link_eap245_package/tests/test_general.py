@@ -17,16 +17,15 @@ class GeneralTest(TestCase):
         response = self.module.do_backup()
         self.assertIsNotNone(response.error, "Response should contains a no password error")
 
-
-    """def test_real_device(self):
+"""
+    def test_real_device(self):
         # enter the real credentials
-        self.module.secrets |= {'password': ''}
+        self.module.secrets |= {
+            'username': '',
+            'password': ''
+        }
         self.module.parameters |= {
-            'host': '',
-            "switch_type": "GS305E",
-            "login_input_id": "password",
-            "login_button_id": "loginBtn",
-            "backup_endpoint": "backup_conf.cgi?cmd=backup_conf"
+            'host': ''
         }
         
         # run the test

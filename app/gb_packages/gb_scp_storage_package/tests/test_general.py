@@ -1,12 +1,9 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
-from django.utils import timezone
 
 from gb_module.gb_module.testing.util.module_test_util import ModuleTestUtil
 from gb_module.gb_module.testing.util.backup_result_test_util import *
 from ..gb_module import *
-import os
-import shutil
 
 # models test
 class GeneralTest(TestCase):
@@ -20,9 +17,11 @@ test
 
     def setUp(self):
         self.module = ModuleTestUtil.create_storage_module(GBModule, self.backup_path)
-        self.module.parameters.append(ModuleTestUtil.create_parameter("username", self.backup_username))
-        self.module.parameters.append(ModuleTestUtil.create_parameter("host", self.backup_host))
-        self.module.secrets.append(ModuleTestUtil.create_secret("private_key", self.private_key))
+        self.module.parameters |= {
+            "username": self.backup_username,
+            "host": self.backup_host,
+            "private_key": self.private_key
+        }
         self.backup_raw = BackupResultTestUtil.create_result_raw_backup()
 
     def test_module_creation(self):

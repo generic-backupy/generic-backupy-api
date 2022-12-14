@@ -35,4 +35,5 @@ class BackupExecution(BaseModel):
     ordering = ['name']
 
     def __str__(self):
-        return f"{self.id} - {self.backup_job.name}"
+        return f"{self.id} - {'Running' if self.state == 1 else ('Error' if self.state == 2 else 'Success')}" \
+               f" - {self.backup_job.name}"
