@@ -31,3 +31,11 @@ class TestBaseModule(TestCase):
         temp_folder_path = self.module.get_temp_folder_path("test")
         self.assertTrue(temp_folder_path.startswith(self.module.temp_path), "temp folder path should start with the temp_path")
 
+    def test_get_host_out_of_params(self):
+        self.module.system["host"] = "testsystem"
+        self.module.parameters["host"] = "testparam"
+        self.assertEqual(self.module.get_host(), "testparam", "Host should be fetched from params")
+
+    def test_get_host_out_of_system(self):
+        self.module.system["host"] = "testsystem"
+        self.assertEqual(self.module.get_host(), "testsystem", "Host should be fetched from params")
