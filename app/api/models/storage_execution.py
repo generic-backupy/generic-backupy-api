@@ -32,9 +32,9 @@ class StorageExecution(BaseModel):
     involved_backup = models.ForeignKey('Backup', on_delete=models.SET_NULL, null=True, blank=True)
 
     # filter
-    search_fields = ['name']
-    ordering_fields = ['name']
-    ordering = ['name']
+    search_fields = []
+    ordering_fields = []
+    ordering = []
 
     def __str__(self):
         return f"{self.id} - {'Running' if self.state == 1 else ('Error' if self.state == 2 else 'Success')}" \

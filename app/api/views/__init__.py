@@ -5,3 +5,13 @@ from .auth_view import *
 from .push_token_view import *
 from .tag_view import *
 from .backup_job_view import *
+from .backup_view import *
+from .backup_execution_view import *
+from .backup_job_view import *
+from .backup_module_view import *
+from .category_view import *
+from .parameter_view import *
+from .secret_view import *
+from .storage_execution_view import *
+from .storage_module_view import *
+from .system_view import *

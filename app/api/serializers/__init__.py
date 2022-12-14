@@ -9,3 +9,4 @@ from .parameter_serializer import *
 from .system_serializer import *
 from .backup_job_secret_serializer import *
 from .backup_job_storage_module_secret_serializer import *
+from .storage_execution_serializer import *

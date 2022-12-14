@@ -1,10 +1,10 @@
-from ..models import backup
+from ..models import Backup
 from rest_framework import serializers
 
 
 class BackupPostSerializer(serializers.ModelSerializer):
     class Meta:
-        model = backup
+        model = Backup
         fields = ('id', 'name', 'description', 'additional_parameters',
                   'path', 'original_file_name',
                   'backup_job', 'backup_module', 'storage_module',
@@ -13,7 +13,7 @@ class BackupPostSerializer(serializers.ModelSerializer):
 
 class BackupRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
-        model = backup
+        model = Backup
         fields = ('id', 'name', 'description', 'additional_parameters',
                   'path', 'original_file_name',
                   'backup_job', 'backup_module', 'storage_module',
@@ -22,31 +22,31 @@ class BackupRetrieveSerializer(serializers.ModelSerializer):
 
 class BackupPathsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = backup
+        model = Backup
         fields = ('id', 'name', 'path', 'original_file_name')
 
 
 class BackupShortDescriptionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = backup
+        model = Backup
         fields = ('id', 'name', 'description', 'additional_parameters')
 
 
 class BackupListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = backup
+        model = Backup
         fields = ('id', 'name', 'description')
 
 
 class BackupShortSerializer(serializers.ModelSerializer):
     class Meta:
-        model = backup
+        model = Backup
         fields = ('id', 'name')
 
 
 class BackupOnlyIdSerializer(serializers.ModelSerializer):
     class Meta:
-        model = backup
+        model = Backup
         fields = ('id',)
 
 

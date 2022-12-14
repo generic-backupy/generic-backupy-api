@@ -11,7 +11,16 @@ router.register(r'pages', PageViewSet, basename="pages")
 router.register(r'users', UserViewSet, basename="users")
 router.register(r'push-tokens', PushTokenViewSet, basename="push-tokens")
 router.register(r'tags', TagViewSet, basename="tags")
+router.register(r'backups', BackupViewSet, basename="backups")
 router.register(r'backup-jobs', BackupJobViewSet, basename="backup-jobs")
+router.register(r'backup-executions', BackupExecutionViewSet, basename="backup-executions")
+router.register(r'backup-modules', BackupModuleViewSet, basename="backup-modules")
+router.register(r'storage-executions', StorageExecutionViewSet, basename="storage-executions")
+router.register(r'storage-modules', StorageModuleViewSet, basename="storage-modules")
+router.register(r'systems', SystemViewSet, basename="systems")
+router.register(r'categories', CategoryViewSet, basename="categories")
+router.register(r'parameters', ParameterViewSet, basename="parameters")
+router.register(r'secrets', SecretViewSet, basename="secrets")
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

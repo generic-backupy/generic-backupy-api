@@ -10,9 +10,8 @@ from api.utils.package_util import PackageUtil
 from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerializer, SystemGbModuleSerializer
 
 @job
-def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStorageModule], user):
+def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStorageModule], user, backup_execution):
     # start a backup_execution
-    backup_execution = BackupExecution.objects.create(created_by=user, backup_job=backup_job, backup_module=backup_module)
     package_instance = None
     do_backup_response = None
     system_dict = SystemGbModuleSerializer(backup_job.system).data

@@ -15,6 +15,11 @@ class SecretPostSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'description', 'secret')
 
 class SecretRetrieveSerializer(serializers.ModelSerializer):
+    secret = serializers.SerializerMethodField('get_secret')
+
+    def get_secret(self, current_object: Secret):
+        return "******"
+
     class Meta:
         model = Secret
         fields = ('id', 'name', 'description', 'secret')
