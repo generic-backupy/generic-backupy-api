@@ -16,8 +16,8 @@ class BackupExecution(BaseModel):
                                    null=True)
     # will be filled after the execution (not matter if it was an error or a success)
     ends_at = models.DateTimeField(null=True, blank=True)
-    # marks the state of the execution (running=1, error=2, success=3)
-    state = models.IntegerField(default=1)
+    # marks the state of the execution (waiting=0, running=1, error=2, success=3)
+    state = models.IntegerField(default=0)
     # output of the execution
     output = models.TextField(null=True, blank=True)
     # logs of the execution
@@ -35,5 +35,16 @@ class BackupExecution(BaseModel):
     ordering = []
 
     def __str__(self):
-        return f"{self.id} - {'Running' if self.state == 1 else ('Error' if self.state == 2 else 'Success')}" \
+        return f"{self.id} - {self.get_state_string()}" \
                f" - {self.backup_job.name}"
+
+    def get_state_string(self):
+        if self.state == 0:
+            return "waiting"
+        elif self.state == 1:
+            return "running"
+        elif self.state == 3:
+            return "success"
+        else:
+            return "error"
+
