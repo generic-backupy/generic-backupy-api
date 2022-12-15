@@ -9,6 +9,7 @@ from ..models import Category
 from django.contrib.auth import get_user_model
 from ..serializers.category_serializer import *
 from ..utils.backup_util import BackupUtil
+from ..utils.category_util import CategoryUtil
 
 User = get_user_model()
 
@@ -46,9 +47,12 @@ class CategoryViewSet(BaseViewSet):
     @action(detail=True, methods=['get'], url_path='execute/backup',
             permission_classes=(IsAuthenticated,))
     def execute_backup(self, request, *args, **kwargs):
-        category = self.get_object()
+        current_category = self.get_object()
 
-        for backup_job in BackupJob.objects.filter(system__category=category).distinct():
+        # fetch all categories (selected and childs)
+        categories = CategoryUtil.get_child_categories(current_category)
+
+        for backup_job in BackupJob.objects.filter(system__category__in=categories).distinct():
             BackupUtil.do_backup(backup_job, self.request.user)
 
-        return Response(f"we got a response :)", 200)
+        return Response(None, 200)

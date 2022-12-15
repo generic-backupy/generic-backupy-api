@@ -13,6 +13,9 @@ jobs:
     - name: setup env
       run: ./setup-env.sh
       shell: bash
+    - name: use ci django env
+      run: cp django.ci.env.example django.env
+      shell: bash
     - name: run the tests
       run: ./manage.py.local.sh test && ./normalize-coverage.sh
       shell: bash

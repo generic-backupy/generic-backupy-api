@@ -65,7 +65,7 @@ class BackupJobViewSet(BaseViewSet):
         #   communicate with the api
         #   Maybe another (more simpler way) is to load the environment of the python module. So each plugin has its own environment
         #   which will be installed, when the user install the plugin. Then we just import the modules of the related environment.
-        return Response(f"we got a response :)", 200)
+        return Response(None, 200)
 
 
 """
