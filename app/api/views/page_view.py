@@ -1,3 +1,5 @@
+from api.serializers.backup_serializer import BackupListSerializer
+
 from api.serializers.category_serializer import CategoryListSerializer
 
 from api.models import BackupExecution, StorageExecution, Backup, System, BackupJob, Category
@@ -22,6 +24,7 @@ class PageViewSet(BaseViewSet):
         page_json["backup_jobs"] = BackupJobListSerializer(BackupJob.objects.all()[:15], many=True).data
         page_json["systems"] = SystemListSerializer(System.objects.all()[:15], many=True).data
         page_json["categories"] = CategoryListSerializer(Category.objects.all()[:15], many=True).data
+        page_json["backups"] = BackupListSerializer(Backup.objects.all()[:15], many=True).data
         page_json["latest_backup_executions"] = BackupExecutionListSerializer(BackupExecution.objects.all().order_by('-id')[:15], many=True).data
         page_json["latest_storage_executions"] = StorageExecutionListSerializer(StorageExecution.objects.all().order_by('-id')[:15], many=True).data
         return Response(page_json)
