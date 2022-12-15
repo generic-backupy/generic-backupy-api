@@ -18,7 +18,7 @@ class StorageExecution(BaseModel):
     # will be filled after the execution (not matter if it was an error or a success)
     ends_at = models.DateTimeField(null=True, blank=True)
     # marks the state of the execution (waiting=0, running=1, error=2, success=3)
-    state = models.IntegerField(default=0)
+    state = models.IntegerField(default=1)
     # output of the execution
     output = models.TextField(null=True, blank=True)
     # logs of the execution
