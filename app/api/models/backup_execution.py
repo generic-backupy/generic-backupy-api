@@ -5,6 +5,7 @@ from django.db.models import Q
 from ..base import BaseModel
 from django.conf import settings
 
+from ..utils.ExecutionUtil import ExecutionUtil
 
 """
 ModelClass for a execution of a specific BackupJob (backup or restore)
@@ -35,16 +36,6 @@ class BackupExecution(BaseModel):
     ordering = []
 
     def __str__(self):
-        return f"{self.id} - {self.get_state_string()}" \
+        return f"{self.id} - {ExecutionUtil.get_state_string(self.state)}" \
                f" - {self.backup_job.name}"
-
-    def get_state_string(self):
-        if self.state == 0:
-            return "waiting"
-        elif self.state == 1:
-            return "running"
-        elif self.state == 3:
-            return "success"
-        else:
-            return "error"
 
