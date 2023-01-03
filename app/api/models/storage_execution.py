@@ -5,6 +5,7 @@ from django.db.models import Q
 from ..base import BaseModel
 from django.conf import settings
 
+from ..utils.ExecutionUtil import ExecutionUtil
 
 """
 ModelClass for a execution of a specific BackupJob (store or fetch a backup from storage)
@@ -16,7 +17,7 @@ class StorageExecution(BaseModel):
                                    null=True)
     # will be filled after the execution (not matter if it was an error or a success)
     ends_at = models.DateTimeField(null=True, blank=True)
-    # marks the state of the execution (running=1, error=2, success=3)
+    # marks the state of the execution (waiting=0, running=1, error=2, success=3)
     state = models.IntegerField(default=1)
     # output of the execution
     output = models.TextField(null=True, blank=True)
@@ -37,5 +38,5 @@ class StorageExecution(BaseModel):
     ordering = []
 
     def __str__(self):
-        return f"{self.id} - {'Running' if self.state == 1 else ('Error' if self.state == 2 else 'Success')}" \
+        return f"{self.id} - {ExecutionUtil.get_state_string(self.state)}" \
                f" - {self.backup_job.name}"

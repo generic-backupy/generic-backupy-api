@@ -222,14 +222,3 @@ RQ_QUEUES = {
         "SSL": (os.environ.get('REDIS_TLS_ENABLED') or "False").lower() in ["true", "yes", "1"]
     }
 }
-
-# Use nose to run all tests
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-# Tell nose to measure coverage on the 'foo' and 'bar' apps
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-html',
-    '--cover-xml',
-    '--cover-package=api,genericbackupy,gb_packages,gb_module',
-]

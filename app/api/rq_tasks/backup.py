@@ -12,6 +12,9 @@ from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerialize
 @job
 def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStorageModule], user, backup_execution):
     # start a backup_execution
+    backup_execution.state = 1
+    backup_execution.save()
+
     package_instance = None
     do_backup_response = None
     system_dict = SystemGbModuleSerializer(backup_job.system).data
