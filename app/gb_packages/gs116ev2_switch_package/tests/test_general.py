@@ -1,4 +1,7 @@
 from unittest import TestCase
+from unittest.mock import patch, Mock
+import time
+from gb_module.gb_module.utils.selenium_util import SeleniumUtil
 
 from gb_module.gb_module.testing.util.module_test_util import ModuleTestUtil
 from ..gb_module import *
@@ -17,6 +20,18 @@ class GeneralTest(TestCase):
         response = self.module.do_backup()
         self.assertIsNotNone(response.error, "Response should contains a no password error")
 
+    @patch.object(BackupFetcher, 'restore_backup')
+    def test_do_restore_general(self, mock_restore_backup):
+        response = self.module.do_restore(RetrieveResult())
+        self.assertIsNone(response.error, "Response shouldn't contains an error")
+        self.assertTrue(mock_restore_backup.called)
+
+    @patch.object(SeleniumUtil, 'get_options_with_download_path', return_value=Mock())
+    @patch.object(time, 'sleep', return_value=Mock())
+    def test_restore_backup_util_method(self, options_call, sleep_call):
+        BackupFetcher.restore_backup("", "", "", "", "", "", "")
+        self.assertTrue(options_call.called)
+        self.assertTrue(sleep_call.called)
 
     """def test_real_device(self):
         # enter the real credentials

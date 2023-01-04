@@ -46,6 +46,15 @@ test
         self.assertIsNotNone(response.path)
         self.assertTrue(mock.called)
 
+    @patch.object(subprocess, 'run', return_value=Mock(stderr=b""))
+    def test_save_backup_success(self, mock):
+        self.module.retrieve_path = "/"
+        response = self.module.retrieve_from_storage()
+        self.assertIsNone(response.error, "Storage Error")
+        self.assertIsNotNone(response)
+        self.assertIsNotNone(response.backup_temp_location)
+        self.assertTrue(mock.called)
+
     """def test_real_test(self):
         response = self.module.save_to_storage(self.backup_raw)
         self.assertIsNone(response.error, "Storage Error")
