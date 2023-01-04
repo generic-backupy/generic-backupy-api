@@ -55,7 +55,7 @@ class GBModule(BackupModule):
             return BackupResult.with_error("Error at download process!", delete_path=temp_folder)
 
         self.log(f"backup was successful, and is stored with temp path {file_path}")
-        return BackupResult(backup_temp_location=file_path, delete_path=temp_folder)
+        return BackupResult(backup_temp_location=file_path, delete_path=temp_folder, original_backup_name=f"{Path(file_path).parts[-1]}")
 
     """
     python representation of the javascript function on the target switch (if we want to switch to requests in the future)

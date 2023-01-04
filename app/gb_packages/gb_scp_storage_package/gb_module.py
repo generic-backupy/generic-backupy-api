@@ -1,5 +1,7 @@
 import os
+import shutil
 
+from gb_module.gb_module.core.retrieve_result import RetrieveResult
 from gb_module.gb_module.core.storage_module import StorageModule
 from gb_module.gb_module.core.backup_result import BackupResult
 from gb_module.gb_module.core.storage_result import StorageResult
@@ -73,7 +75,7 @@ class GBModule(StorageModule):
             error = f"error at storing process on server: {result.stderr.decode()}"
 
         self.log("cleanup created folders and files ...")
-        # shutil.rmtree(temp_folder, ignore_errors=True)
+        shutil.rmtree(temp_folder, ignore_errors=True)
 
         if error:
             return StorageResult.with_error(error)
@@ -83,3 +85,55 @@ class GBModule(StorageModule):
         return StorageResult(path=f"{backup_file_path}",
                              output="Backup successfully stored"
                              )
+
+    def retrieve_from_storage(self):
+        # check if we have a path
+        self.log(f"check inputs ...")
+        try:
+            path = self.get_input_with_name_or_die('path')
+            port = str(self.get_input_with_name('port') or 22)
+            private_key = self.get_input_with_name('private_key')
+            username = self.get_input_with_name_or_die('username')
+            host = self.get_input_with_name_or_die('host')
+        except Exception as e:
+            return BackupResult.with_error(f"input-error: {e}")
+
+        if not self.retrieve_path:
+            return BackupResult.with_error(f"no retrieve path (path on the remote server)")
+
+        # create temp_folder
+        self.log("create temp folder ...")
+        try:
+            temp_folder = self.create_temp_folder("scp_module")
+        except Exception as e:
+            return BackupResult.with_error(f"temp-folder-creation-error: {e}")
+        # TODO: Retrieve the real name
+        backup_file_path = f"{Path(temp_folder).joinpath(self.get_input_with_name('original_backup_name') or 'backup_file')}"
+
+        private_key, private_key_path = self.create_private_key_file(private_key, temp_folder)
+
+        scp_command = ['scp', '-o', 'StrictHostKeyChecking no', '-q', '-P', port]
+        if private_key_path:
+            scp_command += ['-i', private_key_path]
+
+        scp_command += [f"{username}@{host}:{self.retrieve_path}", backup_file_path]
+        error = None
+        result = None
+        try:
+            self.log(f"run {' '.join([str(el) for el in scp_command])}")
+            result = subprocess.run(scp_command, capture_output=True, input=b"yes")
+        except Exception as exception:
+            self.log(f"error at storing process: {exception}")
+            error = f"error at scp command: {exception}"
+
+        if result and result.stderr:
+            error = f"error at storing process on server: {result.stderr.decode()}"
+
+        self.log("cleanup created folders and files ...")
+
+        if error:
+            return StorageResult.with_error(error)
+
+        # return the StorageResult
+        self.log(f"backup was successful")
+        return RetrieveResult(backup_temp_location=f"{backup_file_path}", output="Backup successfully retrieved")

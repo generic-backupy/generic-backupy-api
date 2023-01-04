@@ -152,6 +152,11 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
         if storage_execution.state == 2:
             return
 
+        additional_parameters = do_storage_response.additional_parameters or {}
+        if do_backup_response.original_backup_name:
+            additional_parameters |= {"original_backup_name": do_backup_response.original_backup_name}
+        additional_parameters |= do_backup_response.additional_parameters or {}
+
         # save backup
         backup = Backup.objects.create(
             name=backup_job.name,
@@ -160,7 +165,8 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
             backup_job=backup_job,
             backup_module=backup_module,
             backup_job_storage_module=storage_module_pivot,
-            additional_parameters=do_storage_response.additional_parameters_dict,
+            additional_parameters=additional_parameters,
             backup_execution=backup_execution,
-            storage_execution=storage_execution
+            storage_execution=storage_execution,
+            original_file_name=do_backup_response.original_backup_name
         )

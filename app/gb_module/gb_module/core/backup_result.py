@@ -6,9 +6,11 @@ class BackupResult(BaseResult):
     def __init__(self,
                  raw_backup=None,
                  backup_temp_location=None,
+                 additional_parameters_dict: dict = None,
                  output=None,
                  error=None,
-                 delete_path=None):
+                 delete_path=None,
+                 original_backup_name=None):
         # if the backup is small enough, to save it in this variable
         # (don't use it for big backups because of the RAM)
         self.raw_backup = raw_backup
@@ -20,6 +22,9 @@ class BackupResult(BaseResult):
         self.error = error
         # delete path, if it is set, this path should be deleted after the execution
         self.delete_path = delete_path
+        # real name of the backup, which should be used in the restore process (to have the original backup name like TS345.cfg)
+        self.original_backup_name = original_backup_name
+        self.additional_parameters_dict = additional_parameters_dict
 
     @staticmethod
     def with_error(error, output=None, delete_path=None):

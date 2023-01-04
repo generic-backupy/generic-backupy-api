@@ -22,6 +22,9 @@ def restore(backup: Backup, user, restore_execution):
         # inject the log function
         PackageUtil.inject_module_log_function(storage_package_instance, restore_execution)
 
+        # inject the retrieve path
+        storage_package_instance.retrieve_path = backup.path
+
         # do backup and fetch response (which is a backup_result type)
         try:
             do_retrieve_response = storage_package_instance.retrieve_from_storage()
