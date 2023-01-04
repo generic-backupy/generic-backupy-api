@@ -9,8 +9,29 @@ from api.exceptions import AppErrorException
 from api.models import BackupModule, BackupJob, BackupJobStorageModule
 from django.utils.timezone import now
 
+from gb_module.gb_module.core.base_result import BaseResult
+
 
 class PackageUtil:
+
+    """
+    returns True if there was an error, and handle the execution_instance stuff
+    """
+    @staticmethod
+    def handle_error_if_exist(module_response, execution_instance):
+        has_error = False
+        if not module_response or module_response.error:
+            has_error = True
+            execution_instance.state = 2
+            if module_response:
+                execution_instance.errors = (execution_instance.errors or "") + (module_response.error or "")
+            elif not execution_instance.errors:
+                execution_instance.errors = "UNKNOWN ERROR"
+        if module_response:
+            execution_instance.output = module_response.output
+        execution_instance.save()
+
+        return has_error
     
     @staticmethod
     def inject_storage_parameters(package_instance: BaseModule, backup_job: BackupJob, storage_module_pivot: BackupJobStorageModule, additional_parameters={}):

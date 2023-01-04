@@ -1,13 +1,7 @@
 from django_rq import job
-import django_rq
-from api.models import Backup, BackupJob, BackupJobSecret, BackupJobStorageModule, Secret, BackupExecution, Parameter, \
-    StorageExecution, System
-import time
+from api.models import Backup
 from django.utils.timezone import now
-
-from api.utils.backup_job_util import BackupJobUtil
 from api.utils.package_util import PackageUtil
-from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerializer, SystemGbModuleSerializer
 
 
 @job
@@ -18,13 +12,32 @@ def restore(backup: Backup, user, restore_execution):
     backup_job = backup.backup_job
 
     # first restore it from storage
+    storage_package_instance = PackageUtil.get_package_instance_or_error(restore_execution, backup.backup_job_storage_module.storage_module)
+    do_retrieve_response = None
 
+    if storage_package_instance:
+        # inject the parameters etc.
+        PackageUtil.inject_backup_parameters(storage_package_instance, backup_job, backup.additional_parameters)
 
+        # inject the log function
+        PackageUtil.inject_module_log_function(storage_package_instance, restore_execution)
 
-    # afterwards restore the system with the loaded backup
+        # do backup and fetch response (which is a backup_result type)
+        try:
+            do_retrieve_response = storage_package_instance.retrieve_from_storage()
+        except Exception as error:
+            print(f"error: ", error)
+            restore_execution.state = 2
+            restore_execution.errors = error
 
-    package_instance = PackageUtil.get_package_instance_or_error(restore_execution, backup_job.backup_module)
-    do_backup_response = None
+    # if there was an error at retrieving, stop and return with an error
+    if PackageUtil.handle_error_if_exist(do_retrieve_response, restore_execution):
+        return
+
+    # if retrieve action was successfully, pass the backup to the backup module, and restore it
+
+    package_instance = PackageUtil.get_package_instance_or_error(restore_execution, backup.backup_module)
+    do_restore_response = None
 
     if package_instance:
         # inject the parameters etc.
@@ -35,7 +48,7 @@ def restore(backup: Backup, user, restore_execution):
 
         # do backup and fetch response (which is a backup_result type)
         try:
-            do_backup_response = package_instance.do_backup()
+            do_restore_response = package_instance.do_restore(None)
         except Exception as error:
             print(f"error: ", error)
             restore_execution.state = 2
@@ -44,16 +57,5 @@ def restore(backup: Backup, user, restore_execution):
     # end the restore_execution
     restore_execution.ends_at = now()
     restore_execution.state = 3
-    if not do_backup_response or do_backup_response.error:
-        restore_execution.state = 2
-        if do_backup_response:
-            restore_execution.errors = (restore_execution.errors or "") + (do_backup_response.error or "")
-        elif not restore_execution.errors:
-            restore_execution.errors = "UNKNOWN ERROR"
-    if do_backup_response:
-        restore_execution.output = do_backup_response.output
-    restore_execution.save()
-
-    # return if we had an error
-    if restore_execution.state == 2:
+    if PackageUtil.handle_error_if_exist(do_restore_response, restore_execution):
         return

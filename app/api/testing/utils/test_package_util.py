@@ -15,6 +15,7 @@ from api.views.base_view import UserCurrentConditionsPermission
 from api.views import BaseViewSet, CategoryViewSet
 from django.test import TestCase
 from api.utils.ExecutionUtil import ExecutionUtil
+from gb_module.gb_module.core.base_result import BaseResult
 
 
 class TestPackageUtil(TestCase):
@@ -60,3 +61,28 @@ class TestPackageUtil(TestCase):
         PackageUtil.inject_storage_parameters(package_instance, self.job_switch_1, self.backup_job_storage_module_pivot, {"test2": 1})
         self.assertIsNotNone(package_instance.parameters.get("test"))
         self.assertIsNotNone(package_instance.parameters.get("test2"))
+
+    def test_handle_error_if_exist_no_error(self):
+        result = BaseResult()
+        result.error = None
+        result.output = "Test Output"
+        has_error = PackageUtil.handle_error_if_exist(result, self.execution_instance)
+        self.assertFalse(has_error)
+        self.assertNotEqual(self.execution_instance.state, 2)
+        self.assertEqual(self.execution_instance.output, result.output)
+
+    def test_handle_error_if_exist_error(self):
+        result = BaseResult()
+        result.error = "Error"
+        result.output = "Test Output"
+        has_error = PackageUtil.handle_error_if_exist(result, self.execution_instance)
+        self.assertTrue(has_error)
+        self.assertEqual(self.execution_instance.state, 2)
+        self.assertEqual(self.execution_instance.output, result.output)
+
+
+    def test_handle_error_if_exist_no_result(self):
+        result = None
+        has_error = PackageUtil.handle_error_if_exist(result, self.execution_instance)
+        self.assertTrue(has_error)
+        self.assertEqual(self.execution_instance.state, 2)

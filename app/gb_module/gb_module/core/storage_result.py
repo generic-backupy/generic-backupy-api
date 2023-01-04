@@ -1,4 +1,7 @@
-class StorageResult:
+from gb_module.gb_module.core.base_result import BaseResult
+
+
+class StorageResult(BaseResult):
 
     def __init__(self,
                  path=None,

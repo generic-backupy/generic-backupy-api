@@ -23,7 +23,8 @@ class TestBackupUtil(TestCase):
         BackupUtil.do_restore(self.backup_1, None)
         self.assertEqual(mock_restore_delay_call.call_count, 1, "Call restore delay")
 
-    def test_create_restore_execution(self):
+    @patch("api.rq_tasks.restore.restore.delay")
+    def test_create_restore_execution(self, mock_restore_delay_call):
         amount_of_restore_executions = len(RestoreExecution.objects.all())
         BackupUtil.do_restore(self.backup_1, None)
         self.assertEqual(len(RestoreExecution.objects.all()) - 1, amount_of_restore_executions, "Exact 1 new restore execution should exist")

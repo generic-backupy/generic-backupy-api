@@ -1,7 +1,7 @@
 from gb_module.gb_module.core.base_result import BaseResult
 
 
-class BackupResult(BaseResult):
+class RetrieveResult(BaseResult):
 
     def __init__(self,
                  raw_backup=None,
@@ -23,4 +23,4 @@ class BackupResult(BaseResult):
 
     @staticmethod
     def with_error(error, output=None, delete_path=None):
-        return BackupResult(error=error, output=output, delete_path=delete_path)
+        return RetrieveResult(error=error, output=output, delete_path=delete_path)
