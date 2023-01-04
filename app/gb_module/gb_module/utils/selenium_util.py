@@ -13,7 +13,11 @@ class SeleniumUtil:
         options.add_experimental_option("prefs", prefs)
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
-        return webdriver.Chrome("chromedriver", options=options)
+        options.add_argument("--disable-dev-shm-usage")
+        driver = webdriver.Chrome("chromedriver", options=options)
+        # delete all cookies, because this driver is shared sometimes
+        driver.delete_all_cookies()
+        return driver
 
     @staticmethod
     def wait_for_download(temp_path: str, timeout=90):
