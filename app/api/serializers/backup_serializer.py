@@ -7,7 +7,7 @@ class BackupPostSerializer(serializers.ModelSerializer):
         model = Backup
         fields = ('id', 'name', 'description', 'additional_parameters',
                   'path', 'original_file_name',
-                  'backup_job', 'backup_module', 'storage_module',
+                  'backup_job', 'backup_module', 'backup_job_storage_module',
                   'backup_execution', 'storage_execution')
 
 
@@ -16,7 +16,7 @@ class BackupRetrieveSerializer(serializers.ModelSerializer):
         model = Backup
         fields = ('id', 'name', 'description', 'additional_parameters',
                   'path', 'original_file_name',
-                  'backup_job', 'backup_module', 'storage_module',
+                  'backup_job', 'backup_module', 'backup_job_storage_module',
                   'backup_execution', 'storage_execution')
 
 
@@ -35,7 +35,7 @@ class BackupShortDescriptionSerializer(serializers.ModelSerializer):
 class BackupListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Backup
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'path', 'original_file_name', 'created_at')
 
 
 class BackupShortSerializer(serializers.ModelSerializer):

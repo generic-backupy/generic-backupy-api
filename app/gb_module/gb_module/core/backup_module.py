@@ -1,5 +1,7 @@
 from .base_module import BaseModule
 from .backup_result import BackupResult
+from .retrieve_result import RetrieveResult
+
 
 class BackupModule(BaseModule):
 
@@ -9,5 +11,5 @@ class BackupModule(BaseModule):
     def do_backup(self):
         pass
 
-    def do_restore(self, backup):
+    def do_restore(self, retrieve_result: RetrieveResult):
         pass

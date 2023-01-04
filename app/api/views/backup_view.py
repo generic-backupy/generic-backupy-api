@@ -45,6 +45,6 @@ class BackupViewSet(BaseViewSet):
             permission_classes=(IsAuthenticated,))
     def execute_restore(self, request, *args, **kwargs):
         backup = self.get_object()
-
-        BackupUtil.do_restore(backup, self.request.user)
+        execute_async = request.GET.get('execute-async', 'True').lower() in ['1', 'true']
+        BackupUtil.do_restore(backup, self.request.user, execute_async)
         return Response(None, 200)

@@ -221,3 +221,4 @@ postgres_dumps/*.sql
 redis/tls/*
 !redis/tls/.gitkeep
 backup_temp
+debug_temp

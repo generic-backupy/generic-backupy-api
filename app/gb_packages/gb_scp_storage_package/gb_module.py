@@ -90,7 +90,6 @@ class GBModule(StorageModule):
         # check if we have a path
         self.log(f"check inputs ...")
         try:
-            path = self.get_input_with_name_or_die('path')
             port = str(self.get_input_with_name('port') or 22)
             private_key = self.get_input_with_name('private_key')
             username = self.get_input_with_name_or_die('username')

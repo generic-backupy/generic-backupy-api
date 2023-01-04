@@ -17,7 +17,7 @@ def restore(backup: Backup, user, restore_execution):
 
     if storage_package_instance:
         # inject the parameters etc.
-        PackageUtil.inject_backup_parameters(storage_package_instance, backup_job, backup.additional_parameters)
+        PackageUtil.inject_storage_parameters(storage_package_instance, backup_job, backup.backup_job_storage_module, backup.additional_parameters)
 
         # inject the log function
         PackageUtil.inject_module_log_function(storage_package_instance, restore_execution)
