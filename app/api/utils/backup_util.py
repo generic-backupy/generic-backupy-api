@@ -1,6 +1,7 @@
 from api.exceptions import AppErrorException
-from api.models import BackupJob, BackupJobStorageModule
+from api.models import BackupJob, BackupJobStorageModule, RestoreExecution
 from api.utils.package_util import PackageUtil
+from ..rq_tasks.restore import restore
 
 from ..rq_tasks.backup import *
 
@@ -28,3 +29,8 @@ class BackupUtil:
 
         backup_execution = BackupExecution.objects.create(created_by=user, backup_job=backup_job, backup_module=backup_module)
         backup.delay(backup_job, backup_module, backup_job_storage_modules, user, backup_execution)
+
+    @staticmethod
+    def do_restore(backup_obj: Backup, user):
+        restore_execution = RestoreExecution.objects.create(created_by=user, backup_instance=backup_obj)
+        restore.delay(backup_obj, user, restore_execution)

@@ -159,7 +159,7 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
             path=do_storage_response.path,
             backup_job=backup_job,
             backup_module=backup_module,
-            storage_module=storage_module,
+            backup_job_storage_module=storage_module_pivot,
             additional_parameters=do_storage_response.additional_parameters_dict,
             backup_execution=backup_execution,
             storage_execution=storage_execution
