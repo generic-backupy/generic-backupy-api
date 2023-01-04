@@ -107,8 +107,8 @@ class GBModule(StorageModule):
             temp_folder = self.create_temp_folder("scp_module")
         except Exception as e:
             return BackupResult.with_error(f"temp-folder-creation-error: {e}")
-        # TODO: Retrieve the real name
-        backup_file_path = f"{Path(temp_folder).joinpath(self.get_input_with_name('original_backup_name') or 'backup_file')}"
+
+        backup_file_path = f"{self.get_target_retrieved_file_name(temp_folder)}"
 
         private_key, private_key_path = self.create_private_key_file(private_key, temp_folder)
 

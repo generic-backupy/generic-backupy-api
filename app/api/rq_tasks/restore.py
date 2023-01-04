@@ -51,7 +51,7 @@ def restore(backup: Backup, user, restore_execution):
 
         # do backup and fetch response (which is a backup_result type)
         try:
-            do_restore_response = package_instance.do_restore(None)
+            do_restore_response = package_instance.do_restore(do_retrieve_response)
         except Exception as error:
             print(f"error: ", error)
             restore_execution.state = 2

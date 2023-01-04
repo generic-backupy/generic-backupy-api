@@ -152,3 +152,13 @@ class BaseModule:
     """
     def get_host(self):
         return self.get_input_with_name("host")
+
+
+    def write_raw_backup_to_temp_storage(self, raw_backup, temp_folder):
+        self.log(f"create backup temp file ...")
+        if not raw_backup:
+            raise Exception("No raw backup or temp_location file provided!")
+        backup_file_location = str(Path(temp_folder).joinpath("backup_file"))
+        with open(backup_file_location, "w") as file:
+            file.write(raw_backup)
+        return backup_file_location

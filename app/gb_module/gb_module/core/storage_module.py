@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from .base_module import BaseModule
 from .backup_result import *
 
@@ -13,3 +15,7 @@ class StorageModule(BaseModule):
 
     def retrieve_from_storage(self):
         pass
+
+    def get_target_retrieved_file_name(self, temp_folder):
+        return Path(temp_folder).joinpath(self.get_input_with_name('original_backup_name') or 'backup_file')
+
