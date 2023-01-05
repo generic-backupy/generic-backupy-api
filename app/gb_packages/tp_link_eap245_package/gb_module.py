@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from gb_module.gb_module.core.backup_module import BackupModule
 from gb_module.gb_module.core.backup_result import BackupResult
 import os
@@ -41,5 +43,5 @@ class GBModule(BackupModule):
             return BackupResult.with_error("Error at download process!", delete_path=temp_folder)
 
         self.log("backup was successful")
-        return BackupResult(backup_temp_location=file_path, delete_path=temp_folder)
+        return BackupResult(backup_temp_location=file_path, delete_path=temp_folder, original_backup_name=f"{Path(file_path).parts[-1]}")
 

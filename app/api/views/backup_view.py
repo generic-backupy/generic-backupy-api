@@ -3,6 +3,11 @@ from ..rms_base import RmsBaseViewSetFilter
 from ..models import Backup
 from django.contrib.auth import get_user_model
 from ..serializers.backup_serializer import *
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from ..utils.backup_util import BackupUtil
 
 User = get_user_model()
 
@@ -36,3 +41,10 @@ class BackupViewSet(BaseViewSet):
     def get_queryset(self):
         return Backup.objects.all()
 
+    @action(detail=True, methods=['get'], url_path='execute/restore',
+            permission_classes=(IsAuthenticated,))
+    def execute_restore(self, request, *args, **kwargs):
+        backup = self.get_object()
+        execute_async = request.GET.get('execute-async', 'True').lower() in ['1', 'true']
+        BackupUtil.do_restore(backup, self.request.user, execute_async)
+        return Response(None, 200)

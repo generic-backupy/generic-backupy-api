@@ -4,6 +4,7 @@ from api.serializers import BackupJobSecretGbModuleSerializer, BackupJobStorageM
 
 
 class BackupJobUtil:
+
     @staticmethod
     def parsed_parameter_dict(backup_job: BackupJob):
         backup_parameters = Parameter.objects.filter(backup_job_parameter_parameter__backup_job=backup_job).distinct()

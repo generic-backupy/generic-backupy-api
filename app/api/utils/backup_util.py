@@ -1,6 +1,7 @@
 from api.exceptions import AppErrorException
-from api.models import BackupJob, BackupJobStorageModule
+from api.models import BackupJob, BackupJobStorageModule, RestoreExecution
 from api.utils.package_util import PackageUtil
+from ..rq_tasks.restore import restore
 
 from ..rq_tasks.backup import *
 
@@ -10,7 +11,7 @@ Provides an interface, to hide the implementation for rq (func.delay(..)), to sw
 class BackupUtil:
 
     @staticmethod
-    def do_backup(backup_job: BackupJob, user):
+    def do_backup(backup_job: BackupJob, user, execute_async=True):
         backup_module = backup_job.backup_module
 
         # raise error if no backup_module is specified
@@ -27,4 +28,15 @@ class BackupUtil:
                             "you need at least one storage module", status_code=400)
 
         backup_execution = BackupExecution.objects.create(created_by=user, backup_job=backup_job, backup_module=backup_module)
-        backup.delay(backup_job, backup_module, backup_job_storage_modules, user, backup_execution)
+        backup_func = backup
+        if execute_async:
+            backup_func = backup.delay
+        backup_func(backup_job, backup_module, backup_job_storage_modules, user, backup_execution)
+
+    @staticmethod
+    def do_restore(backup_obj: Backup, user, execute_async=True):
+        restore_execution = RestoreExecution.objects.create(created_by=user, backup_instance=backup_obj)
+        restore_func = restore
+        if execute_async:
+            restore_func = restore.delay
+        restore_func(backup_obj, user, restore_execution)

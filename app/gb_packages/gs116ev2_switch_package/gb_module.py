@@ -5,6 +5,8 @@ from gb_module.gb_module.core.backup_result import BackupResult
 import hmac
 import os
 
+from gb_module.gb_module.core.restore_result import RestoreResult
+from gb_module.gb_module.core.retrieve_result import RetrieveResult
 from gb_packages.gs116ev2_switch_package.utils.backup_fetcher import BackupFetcher
 
 
@@ -55,7 +57,40 @@ class GBModule(BackupModule):
             return BackupResult.with_error("Error at download process!", delete_path=temp_folder)
 
         self.log(f"backup was successful, and is stored with temp path {file_path}")
-        return BackupResult(backup_temp_location=file_path, delete_path=temp_folder)
+        return BackupResult(backup_temp_location=file_path, delete_path=temp_folder, original_backup_name=f"{Path(file_path).parts[-1]}")
+
+    def do_restore(self, retrieve_result: RetrieveResult):
+        # check secrets and params
+        self.log("check secrets and params ...")
+        try:
+            password = self.get_input_with_name_or_die("password")
+            host = self.get_input_with_name_or_die("host")
+            protocol = self.get_input_with_name("protocol") or "http"
+            timeout = self.get_input_with_name("timeout") or 60
+            switch_type = self.get_input_with_name("switch_type") or "GS116Ev2"
+            login_input_id = self.get_input_with_name("login_input_id") or "passwordtmp"
+            login_button_id = self.get_input_with_name("login_button_id") or "btnApply"
+            backup_endpoint = self.get_input_with_name("backup_endpoint") or f"{switch_type}.cfg"
+            if backup_endpoint.startswith("/"):
+                backup_endpoint = backup_endpoint[1:]
+        except Exception as e:
+            return BackupResult.with_error(f"input-error: {e}")
+
+        self.log("try to execute")
+        # do the backup
+        self.log("do restore ...")
+        try:
+            BackupFetcher.restore_backup(retrieve_result.backup_temp_location, host, password, switch_type,
+                                       login_input_id, login_button_id,
+                                       backup_endpoint, protocol=protocol,
+                                       timeout=timeout
+                                       )
+        except Exception as e:
+            return RestoreResult.with_error(f"Error at fetching: {e}")
+
+        # check the backup and return
+        # TODO: find solution to problem with the switch and selenium (the application isn't working with a headless selenium instance in the docker container)
+        return RestoreResult(output="restored")
 
     """
     python representation of the javascript function on the target switch (if we want to switch to requests in the future)
