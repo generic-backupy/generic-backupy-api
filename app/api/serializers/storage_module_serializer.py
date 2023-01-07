@@ -3,9 +3,11 @@ from rest_framework import serializers
 
 
 class StorageModulePostSerializer(serializers.ModelSerializer):
+    file_uploaded = serializers.FileField()
+
     class Meta:
         model = StorageModule
-        fields = ('id', 'name', 'description', 'file_system_path')
+        fields = ('file_uploaded',)
 
 
 class StorageModuleRetrieveSerializer(serializers.ModelSerializer):

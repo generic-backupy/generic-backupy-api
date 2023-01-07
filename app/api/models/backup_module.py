@@ -14,6 +14,7 @@ class BackupModule(BaseModel):
     # link to the folder like module /opt/data/modules/any-module/gb_module.py
     # the file_system_path would be /opt/data/modules/any-module
     file_system_path = models.TextField()
+    module_config = models.JSONField(null=True, blank=True, default=None)
 
     # filter
     search_fields = ['name']

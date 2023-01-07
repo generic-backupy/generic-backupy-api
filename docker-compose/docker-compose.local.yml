@@ -44,6 +44,7 @@ services:
       - ../app:/code
       - ../redis:/redis
       - ../debug_temp:/debug_temp
+      - ../packages:/packages
     env_file:
       - ../postgres.env
       - ../django.env
@@ -68,6 +69,7 @@ services:
       - ../app:/code
       - ../backup_temp:/backup_temp
       - ../debug_temp:/debug_temp
+      - ../packages:/packages
     env_file:
       - ../postgres.env
       - ../django.env

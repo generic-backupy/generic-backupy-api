@@ -8,6 +8,8 @@ from gb_module.gb_module.core.base_module import BaseModule
 from api.exceptions import AppErrorException
 from api.models import BackupModule, BackupJob, BackupJobStorageModule
 from django.utils.timezone import now
+from pathlib import Path
+import os
 
 from gb_module.gb_module.core.base_result import BaseResult
 
@@ -92,6 +94,22 @@ class PackageUtil:
 
         return package_instance
 
+    """
+    load the venv of a given path.
+    It loads all site-packages paths of venv/lib/python{x} paths to the sys.path array, to import it later
+    """
+    @staticmethod
+    def load_venv(path):
+        # add venv of the module to the path
+        lib_path = Path(path).joinpath("venv").joinpath("lib")
+        if lib_path.exists():
+            for c_lib in os.listdir(str(lib_path)):
+                c_lib_path = lib_path.joinpath(c_lib)
+                if c_lib_path.is_dir():
+                    site_packages_path = c_lib_path.joinpath("site-packages")
+                    if site_packages_path.exists():
+                        sys.path.insert(0, str(site_packages_path))
+
     @staticmethod
     def get_python_class_of_module(backup_module: BackupModule):
         backup_class = None
@@ -100,6 +118,8 @@ class PackageUtil:
         module_name = "GBModule"
         module_file = "gb_module.py"
         file_system_path = backup_module.file_system_path
+        # load venv
+        PackageUtil.load_venv(file_system_path)
         # append a / if there is no / at the end
         file_system_path += "/" if not file_system_path.endswith("/") else ""
         # get the spec

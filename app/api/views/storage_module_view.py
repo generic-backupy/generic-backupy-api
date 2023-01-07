@@ -1,8 +1,14 @@
+import time
+
+from django.core.files.storage import FileSystemStorage
+from rest_framework.response import Response
+
 from .base_view import BaseViewSet
 from ..rms_base import RmsBaseViewSetFilter
-from ..models import StorageModule
+from ..models import StorageModule, ModuleInstallationExecution
 from django.contrib.auth import get_user_model
 from ..serializers.storage_module_serializer import *
+from api.rq_tasks.module_installation import *
 
 User = get_user_model()
 
@@ -27,11 +33,19 @@ class StorageModuleViewSet(BaseViewSet):
     def get_serializer_list_class(self, *args, **kwargs):
         return StorageModuleListSerializer
 
-    def perform_create(self, serializer):
-        self.add_user_agent_to_serializer(serializer)
-        self.add_field_to_serializer(serializer, "created_by", self.request.user)
-
-        super(StorageModuleViewSet, self).perform_create(serializer)
+    def create(self, request):
+        install_execution = ModuleInstallationExecution.objects.create(created_by=request.user)
+        try:
+            file_uploaded = request.FILES.get('file_uploaded')
+            fs = FileSystemStorage(location='/packages')
+            filename = fs.save(f"{time.time()}-{file_uploaded.name}", file_uploaded)
+            install_module.delay(filename, install_execution)
+            return Response()
+        except Exception as e:
+            install_execution.state = 2
+            install_execution.errors = f"error: {e}"
+            install_execution.save()
+            return Response(f"Error: {e}", 400)
 
     def get_queryset(self):
         return StorageModule.objects.all()
