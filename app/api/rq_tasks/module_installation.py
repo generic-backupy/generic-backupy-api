@@ -10,7 +10,7 @@ import json
 install a module
 module_type: 1=backup, 2=storage
 """
-@job
+@job("default", timeout=60*30)
 def install_module(filename, install_execution: ModuleInstallationExecution, module_type=1):
     install_execution.state = 1
     install_execution.logs = f"start installation ...\n"
@@ -23,6 +23,7 @@ def install_module(filename, install_execution: ModuleInstallationExecution, mod
         filename = filename.replace('.zip', '-unzipped')
         unzipped_path = Path("/packages").joinpath(filename)
         os.system(f"unzip {path} -d {unzipped_path}")
+        os.system(f"rm -rf {path}")
         path = unzipped_path
 
         if not path.exists():

@@ -39,7 +39,7 @@ class StorageModuleViewSet(BaseViewSet):
             file_uploaded = request.FILES.get('file_uploaded')
             fs = FileSystemStorage(location='/packages')
             filename = fs.save(f"{time.time()}-{file_uploaded.name}", file_uploaded)
-            install_module.delay(filename, install_execution)
+            install_module.delay(filename, install_execution, 2)
             return Response()
         except Exception as e:
             install_execution.state = 2
