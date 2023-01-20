@@ -15,7 +15,7 @@ class TestModelUser(TestCase):
     def test_create_defaults(self):
         u = User.objects.create()
         db = User.objects.all()
-        self.assertEqual(len(db), 1, "object not saved")
+        self.assertEqual(len(db), 1, "Object not added to db")
         self.assertEqual(db[0].created_language, "en", "Wrong default value in 'created_language'")
         self.assertIsNone(db[0].email_verification_code, "Wrong default value in 'email_verification_code'")
         self.assertFalse(db[0].email_verified, "Wrong default value in 'email_verified'")
@@ -24,7 +24,7 @@ class TestModelUser(TestCase):
         u = User.objects.create(
             email_verification_code="123", privacy_version="123", conditions_version="123", created_language="pl")
         db = User.objects.all()
-        self.assertEqual(len(db), 1, "object not saved")
+        self.assertEqual(len(db), 1, "Object not added to db")
         self.assertEqual(db[0].email_verification_code, "123", "Error in field 'email_verification_code'")
         self.assertEqual(db[0].privacy_version, "123", "Error in field 'privacy_version'")
         self.assertEqual(db[0].conditions_version, "123", "Error in field 'conditions_version'")
