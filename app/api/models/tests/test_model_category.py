@@ -1,5 +1,5 @@
 from django.test import TestCase
-from api.models import Category
+from api.models import Category, User
 from django.db import IntegrityError
 
 
@@ -39,6 +39,12 @@ class TestModelBackup(TestCase):
         c = Category.objects.filter(name="child")
         self.assertEqual(len(c), 1, "'child' object not added to db")
         self.assertEqual(c[0].parent, parent, "Error in field 'parent'")
+
+    def test_create_wrong_foreignkey(self):
+        u = User.objects.create()
+        with self.assertRaises(ValueError, msg="Wrong data type not detected"):
+            Category.objects.create(name="name", parent=u)
+
 
 
     def test_delete(self):

@@ -24,7 +24,7 @@ class TestModelBackup(TestCase):
         self.assertIsNone(db[0].original_file_name, "Wrong default value in 'original_file_name'")
 
     def test_create_more_fields(self):
-        b = Backup.objects.create(name="name", original_file_name="file", path="path")
+        Backup.objects.create(name="name", original_file_name="file", path="path")
         db = Backup.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
         self.assertEqual(db[0].name, "name", "Error in field 'name'")
@@ -34,7 +34,7 @@ class TestModelBackup(TestCase):
         self.assertIsNone(db[0].description, "Wrong default value in 'description'")
 
     def test_delete(self):
-        b = Backup.objects.create(name="name")
+        Backup.objects.create(name="name")
         db = Backup.objects.all()
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
