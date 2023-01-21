@@ -27,6 +27,11 @@ class TestModelPushToken(TestCase):
         self.assertEqual(len(db), 1, "Object not added to db")
         self.assertEqual(db[0].key, "key", "Error in field 'key'")
 
+    def test_create_wrong_foreignkey(self):
+        dummy = User.objects.create()
+        with self.assertRaises(ValueError, msg="Wrong data type detected"):
+            PushToken.objects.create(key="key", auth_token=dummy)
+
 
 class TestModelPushTokenTrans(TransactionTestCase):
 
