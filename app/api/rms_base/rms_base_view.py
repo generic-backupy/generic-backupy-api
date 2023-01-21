@@ -94,7 +94,6 @@ class RmsBaseViewSet(viewsets.ModelViewSet):
             self.permission_classes = ()
 
     def perform_create(self, serializer):
-        self.add_user_agent_to_serializer(serializer)
         super(RmsBaseViewSet, self).perform_create(serializer)
 
     def get_additional_permission_classes(self):

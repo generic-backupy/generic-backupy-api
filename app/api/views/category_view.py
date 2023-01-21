@@ -35,7 +35,6 @@ class CategoryViewSet(BaseViewSet):
         return CategoryListSerializer
 
     def perform_create(self, serializer):
-        self.add_user_agent_to_serializer(serializer)
         self.add_field_to_serializer(serializer, "created_by", self.request.user)
 
         super(CategoryViewSet, self).perform_create(serializer)
