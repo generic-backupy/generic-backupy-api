@@ -31,5 +31,6 @@ class TestModelBackup(TestCase):
     def test_delete(self):
         BackupModule.objects.create(name="name")
         db = BackupModule.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")

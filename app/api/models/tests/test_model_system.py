@@ -34,6 +34,8 @@ class TestModelBackup(TestCase):
 
     def test_create_foreignkey(self):
         cat = Category.objects.create(name="name")
+        dummy_db = Category.objects.all()
+        self.assertEqual(len(dummy_db), 1, "Dummy object not added to db")
         System.objects.create(name="name", category=cat)
         db = System.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
@@ -43,11 +45,14 @@ class TestModelBackup(TestCase):
 
     def test_create_wrong_foreignkey(self):
         dummy = User.objects.create()
+        dummy_db = User.objects.all()
+        self.assertEqual(len(dummy_db), 1, "Dummy object not added to db")
         with self.assertRaises(ValueError, msg="Wrong data type not detected"):
             System.objects.create(name="name", category=dummy)
 
     def test_delete(self):
         System.objects.create(name="name")
         db = System.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")

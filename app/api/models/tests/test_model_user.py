@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TransactionTestCase, TestCase
 
 from api.models import User
 
@@ -13,7 +13,7 @@ class TestModelUser(TestCase):
         db.delete()
 
     def test_create_defaults(self):
-        u = User.objects.create()
+        User.objects.create()
         db = User.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
         self.assertEqual(db[0].created_language, "en", "Wrong default value in 'created_language'")
@@ -21,7 +21,7 @@ class TestModelUser(TestCase):
         self.assertFalse(db[0].email_verified, "Wrong default value in 'email_verified'")
 
     def test_create_char_fields_only(self):
-        u = User.objects.create(
+        User.objects.create(
             email_verification_code="123", privacy_version="123", conditions_version="123", created_language="pl")
         db = User.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
@@ -32,28 +32,45 @@ class TestModelUser(TestCase):
         self.assertFalse(db[0].email_verified, "Wrong default value in 'email_verified'")
 
     def test_create_bool_fields_only(self):
-        u = User.objects.create(email_verified=True)
+        User.objects.create(email_verified=True)
         db = User.objects.all()
         self.assertTrue(db[0].email_verified, "Error in field 'email_verified'")
         self.assertEqual(db[0].created_language, "en", "Wrong default value in 'created_language'")
 
+    def test_create_fields_parent_class(self):
+        # parent class comes from package, therefore it doesn't have to be tested deeply
+        User.objects.create(username="name")
+        db = User.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        self.assertEqual(db[0].username, "name", "Error in field 'username")
+
     def test_constraints(self):
         with self.assertRaises(DataError, msg="Constraints Validated (too long str in 'privacy_version'"):
-            u = User.objects.create(privacy_version="1234567")
+            User.objects.create(privacy_version="1234567")
 
     def test_delete(self):
-        u = User.objects.create()
+        User.objects.create()
         db = User.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
 
+
+class TestModelUserTrans(TransactionTestCase):
     def test_unique(self):
-        u1 = User.objects.create(email_verification_code="1")
-        with self.assertRaises(IntegrityError, msg="Uniqueness constraints validated"):
-            u2 = User.objects.create(email_verification_code="1")
-
-
-
-
-
-
+        User.objects.create(username="name")
+        db = User.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        with self.assertRaises(IntegrityError, msg="Uniqueness constraints violated (username)"):
+            User.objects.create(username="name")
+        User.objects.create(username="other_name")
+        db = User.objects.all()
+        self.assertEqual(len(db), 2, "Second object not added to db")
+        db.delete()
+        self.assertEqual(len(db), 0, "Error while deleting")
+        User.objects.create(username="name", email_verification_code="1")
+        User.objects.create(username="other_name", email_verification_code="2")
+        db = User.objects.all()
+        self.assertEqual(len(db), 2, "Object(s) not added to db")
+        with self.assertRaises(IntegrityError, msg="Uniqueness constraints violated (email_verification_code)"):
+            User.objects.create(username="third_name", email_verification_code="1")

@@ -41,14 +41,17 @@ class TestModelBackup(TestCase):
         self.assertEqual(c[0].parent, parent, "Error in field 'parent'")
 
     def test_create_wrong_foreignkey(self):
-        u = User.objects.create()
+        dummy = User.objects.create()
+        db = User.objects.all()
+        self.assertEqual(len(db), 1, "Dummy object not added to db")
         with self.assertRaises(ValueError, msg="Wrong data type not detected"):
-            Category.objects.create(name="name", parent=u)
+            Category.objects.create(name="name", parent=dummy)
 
 
 
     def test_delete(self):
         Category.objects.create(name="name")
         db = Category.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
