@@ -32,6 +32,14 @@ class TestModelPushToken(TestCase):
         with self.assertRaises(ValueError, msg="Wrong data type detected"):
             PushToken.objects.create(key="key", auth_token=dummy)
 
+    def test_delete(self):
+        auth = create_user_auth_token()
+        PushToken.objects.create(key="key", auth_token=auth)
+        db = PushToken.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        db.delete()
+        self.assertEqual(len(db), 0, "Error while deleting")
+
 
 class TestModelPushTokenTrans(TransactionTestCase):
 

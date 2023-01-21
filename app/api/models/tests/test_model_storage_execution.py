@@ -9,14 +9,19 @@ class TestModelStorageExecution(TestCase):
         db = StorageExecution.objects.all()
         db.delete()
 
+    def create_backup_job(self):
+        dummy = BackupJob.objects.create(name="name")
+        dummy_db = BackupJob.objects.all()
+        self.assertEqual(len(dummy_db), 1, "Dummy object not added to db")
+        return dummy
+
+
     def test_create_empty_required_fields(self):
         with self.assertRaises(IntegrityError, msg="Non-Null constrain violated"):
             StorageExecution.objects.create(backup_job=None)
 
     def test_create_required_fields_only(self):
-        dummy = BackupJob.objects.create(name="name")
-        dummy_db = BackupJob.objects.all()
-        self.assertEqual(len(dummy_db), 1, "Dummy object not added to db")
+        dummy = self.create_backup_job()
         StorageExecution.objects.create(backup_job=dummy)
         db = StorageExecution.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
@@ -24,9 +29,7 @@ class TestModelStorageExecution(TestCase):
         self.assertEqual(db[0].state, 1, "Wrong default value in field 'state'")
 
     def test_create_more_fields(self):
-        dummy = BackupJob.objects.create(name="name")
-        dummy_db = BackupJob.objects.all()
-        self.assertEqual(len(dummy_db), 1, "Dummy object not added to db")
+        dummy = self.create_backup_job()
         StorageExecution.objects.create(backup_job=dummy, state=2, output="test", logs="test")
         db = StorageExecution.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
@@ -36,9 +39,7 @@ class TestModelStorageExecution(TestCase):
         self.assertEqual(db[0].logs, "test", "Error in field 'logs'")
 
     def test_create_foreignkey(self):
-        dummy_bj = BackupJob.objects.create(name="name")
-        dummy_db = BackupJob.objects.all()
-        self.assertEqual(len(dummy_db), 1, "Dummy object (backup_job) not added to db")
+        dummy_bj = self.create_backup_job()
         dummy_sm = StorageModule.objects.create(name="name")
         dummy_db = StorageModule.objects.all()
         self.assertEqual(len(dummy_db), 1, "Dummy object (storage_module) not added to db")
@@ -60,9 +61,7 @@ class TestModelStorageExecution(TestCase):
 
 
     def test_create_wrong_foreignkey(self):
-        dummy_bj = BackupJob.objects.create(name="name")
-        dummy_db = BackupJob.objects.all()
-        self.assertEqual(len(dummy_db), 1, "Dummy object (backup_job) not added to db")
+        dummy_bj = self.create_backup_job()
         dummy = User.objects.create()
         dummy_db = User.objects.all()
         self.assertEqual(len(dummy_db), 1, "Dummy object (bckup_module) not added to db")
@@ -70,3 +69,11 @@ class TestModelStorageExecution(TestCase):
             StorageExecution.objects.create(backup_job=dummy_bj, storage_module=dummy)
         with self.assertRaises(ValueError, msg="Wrong data type not detected (invoked_backup)"):
             StorageExecution.objects.create(backup_job=dummy_bj, involved_backup=dummy)
+
+    def test_delete(self):
+        dummy = self.create_backup_job()
+        StorageExecution.objects.create(backup_job=dummy)
+        db = StorageExecution.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        db.delete()
+        self.assertEqual(len(db), 0, "Error while deleting")

@@ -27,3 +27,10 @@ class TestModelParameter(TestCase):
         self.assertEqual(db[0].name, "name", "Error in field 'name")
         self.assertEqual(db[0].parameter, {}, "Error in field 'parameter")
         self.assertEqual(db[0].description,"desc", "Wrong default value in field 'description'")
+
+    def test_delete(self):
+        Parameter.objects.create(name="name", parameter={})
+        db = Parameter.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        db.delete()
+        self.assertEqual(len(db), 0, "Error while deleting")
