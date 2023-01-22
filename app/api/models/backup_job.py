@@ -68,7 +68,7 @@ class BackupJobStorageModule(BaseModel):
                                           on_delete=models.SET_NULL, related_name="backup_job_storage_module_encryption_secret")
 
     def __str__(self):
-        return f"{self.id} - {self.backup_job.name}/{self.storage_module}"
+        return f"{self.id} - {self.backup_job.name}/{self.storage_module.name}"
 
 
 class BackupJobStorageModuleSecret(BaseModel):

@@ -101,6 +101,14 @@ class TestModelBackupJob(TestCase):
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
 
+    def test_str(self):
+        b = BackupJob.objects.create(name="name")
+        db = BackupJob.objects.all()
+        self.assertEqual(len(db), 1, "object not added to db")
+        s = str(b)
+        proper_str = f"{b.id} - name"
+        self.assertEqual(s, proper_str, "Error while creating string")
+
 
 class TestModelBackupJobSecret(TestCase):
 
@@ -148,6 +156,15 @@ class TestModelBackupJobSecret(TestCase):
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
 
+    def test_str(self):
+        dummy_secret, dummy_bj = self.create_dummies()
+        b = BackupJobSecret.objects.create(backup_job=dummy_bj, secret=dummy_secret, key="key")
+        db = BackupJobSecret.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(b)
+        proper_str = f"{b.id} - bj/secret"
+        self.assertEqual(s, proper_str, "Error while creating string")
+
 class TestModelBackupJobParameter(TestCase):
     def setUp(self):
         db = BackupJobParameter.objects.all()
@@ -181,6 +198,15 @@ class TestModelBackupJobParameter(TestCase):
         self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
+
+    def test_str(self):
+        dummy_parameter, dummy_bj = self.create_dummies()
+        b = BackupJobParameter.objects.create(backup_job=dummy_bj, parameter=dummy_parameter)
+        db = BackupJobParameter.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(b)
+        proper_str = f"{b.id} - bj/param"
+        self.assertEqual(s, proper_str, "Error while creating string")
 
 
 class TestBackupJobStorageModuleSecret(TestCase):
@@ -226,6 +252,15 @@ class TestBackupJobStorageModuleSecret(TestCase):
         self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
+
+    def test_str(self):
+        dummy_bjsm, dummy_secret = self.create_dummies()
+        b = BackupJobStorageModuleSecret.objects.create(backup_job_storage_module=dummy_bjsm, secret=dummy_secret)
+        db = BackupJobStorageModuleSecret.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(b)
+        proper_str = f"{b.id} - bj/secret"
+        self.assertEqual(s, proper_str, "Error while creating string")
 
 
 class TestModelBackupJobStorageModule(TestCase):
@@ -298,6 +333,15 @@ class TestModelBackupJobStorageModule(TestCase):
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
 
+    def test_str(self):
+        dummy_sm, dummy_bj = self.create_dummies()
+        b = BackupJobStorageModule.objects.create(backup_job=dummy_bj, storage_module=dummy_sm)
+        db = BackupJobStorageModule.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(b)
+        proper_str = f"{b.id} - bj/storage"
+        self.assertEqual(s, proper_str, "Error while creating string")
+
 
 class TestBackupJobStorageModuleParameter(TestCase):
 
@@ -333,3 +377,12 @@ class TestBackupJobStorageModuleParameter(TestCase):
         self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
+
+    def test_str(self):
+        dummy_parameter, dummy_bjsm = self.create_dummies()
+        b = BackupJobStorageModuleParameter.objects.create(backup_job_storage_module=dummy_bjsm, parameter=dummy_parameter)
+        db = BackupJobStorageModuleParameter.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(b)
+        proper_str = f"{b.id} - bj/param"
+        self.assertEqual(s, proper_str, "Error while creating string")

@@ -18,7 +18,7 @@ class TestModelTag(TestCase):
         self.assertEqual(db[0].name, "name", "Error in field 'name'")
         self.assertIsNone(db[0].description, "Wrong default value in 'description'")
 
-    def test_create_all_fields(self):
+    def test_save(self):
         Tag.objects.create(name="name", description="desc")
         db = Tag.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
@@ -26,7 +26,7 @@ class TestModelTag(TestCase):
         self.assertEqual(db[0].description, "desc", "Error in field 'description'")
 
 
-    def test_delete(self):
+    def test_clean(self):
         Tag.objects.create(name="name")
         db = Tag.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")

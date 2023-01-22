@@ -33,3 +33,11 @@ class TestModelBackup(TestCase):
         self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
+
+    def test_str(self):
+        b = BackupModule.objects.create(name="name")
+        db = BackupModule.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(b)
+        proper_str = f"{b.id} - name"
+        self.assertEqual(s, proper_str, "Error while creating string")

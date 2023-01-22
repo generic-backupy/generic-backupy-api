@@ -1,6 +1,7 @@
 from django.test import TransactionTestCase, TestCase
+from knox.models import AuthToken
 
-from api.models import User
+from api.models import User, PushToken
 
 from django.db import IntegrityError, DataError
 
@@ -53,6 +54,46 @@ class TestModelUser(TestCase):
         self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
+
+    def test_create_email_verification_code(self):
+        u = User.objects.create(username="user")
+        verification_code, now = u.create_email_verification_code()
+        self.assertIsInstance(verification_code, str, "Error while creating verification code: wrong type")
+        self.assertEqual(len(verification_code), 32, "Error while creating verification code: too short")
+        db = User.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        self.assertEqual(db[0].email_verification_code, verification_code, "Error in field 'verification_code'")
+        self.assertEqual(db[0].email_verification_code_created_at, now, "Error in field 'verification_code'")
+        u = User.objects.create(username="user2", email_verification_code="1")
+        verification_code, _ = u.create_email_verification_code(save=False)
+        db = User.objects.all()
+        self.assertEqual(len(db), 2, "Object not added to db")
+        self.assertEqual(db[1].email_verification_code, "1",
+                         "Error in field 'verification_code' - not supposed to change")
+        u = User.objects.create(username="user3", email_verification_code="2")
+        verification_code, _ = u.create_email_verification_code(save=True)
+        db = User.objects.all()
+        self.assertEqual(len(db), 3, "Object not added to db")
+        self.assertEqual(db[2].email_verification_code, verification_code,
+                         "Error in field 'verification_code' - supposed to change")
+
+    def test_get_push_token(self):
+        u = User.objects.create(username="user")
+        token = u.get_push_tokens()
+        token = str(token)
+        proper_ans = "<QuerySet []>"
+        self.assertEqual(token, proper_ans, "Error while retrieving push tokens (empty)")
+        auth = AuthToken.objects.create(u)[0]
+        PushToken.objects.create(key="key", auth_token=auth)
+        token = u.get_push_tokens()
+        token = str(token)
+        proper_ans = "<QuerySet ['key']>"
+        self.assertEqual(token, proper_ans,"Error while retrieving push tokens (one el)")
+        PushToken.objects.create(key="key2", auth_token=auth)
+        token = u.get_push_tokens()
+        token = str(token)
+        proper_ans = "<QuerySet ['key', 'key2']>"
+        self.assertEqual(token, proper_ans,"Error while retrieving push tokens (many els)")
 
 
 class TestModelUserTrans(TransactionTestCase):

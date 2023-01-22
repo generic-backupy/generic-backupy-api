@@ -64,4 +64,11 @@ class TestModelBackupExecution(TestCase):
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
 
-
+    def test_str(self):
+        dummy = self.create_dummy()
+        b = BackupExecution.objects.create(backup_job=dummy)
+        db = BackupExecution.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(b)
+        proper_str = f"{b.id} - waiting - name"
+        self.assertEqual(s, proper_str, "Error while creating string")
