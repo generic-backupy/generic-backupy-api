@@ -2,21 +2,19 @@ from ..models import BackupExecution
 from rest_framework import serializers
 from .backup_job_serializer import BackupJobGetShortSerializer
 
-class BackupExecutionPostSerializer(serializers.ModelSerializer):
+
+class BackupExecutionPostRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupExecution
         fields = ('id', 'ends_at', 'state',
                   'output', 'logs', 'errors',
                   'backup_job', 'backup_module')
 
+class BackupExecutionPostSerializer(BackupExecutionPostRetrieveSerializer):
+    pass
 
-class BackupExecutionRetrieveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BackupExecution
-        fields = ('id', 'ends_at', 'state',
-                  'output', 'logs', 'errors',
-                  'backup_job', 'backup_module')
-
+class BackupExecutionRetrieveSerializer(BackupExecutionPostRetrieveSerializer):
+    pass
 
 class BackupExecutionErrorsSerializer(serializers.ModelSerializer):
     class Meta:
