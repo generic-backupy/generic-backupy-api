@@ -33,6 +33,14 @@ class TestModelTag(TestCase):
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
 
+    def test_str(self):
+        tag = Tag.objects.create(name="name")
+        db = Tag.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(tag)
+        proper_str = f"{tag.id} - name"
+        self.assertEqual(s, proper_str, "Error in creating string")
+
 
 class TestModelTagTrans(TransactionTestCase):
     def test_check_duplicates(self):
