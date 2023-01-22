@@ -1,17 +1,20 @@
-from ..models import StorageModule
 from rest_framework import serializers
 
+from ..models import StorageModule
 
-class StorageModulePostSerializer(serializers.ModelSerializer):
+
+class StorageModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = StorageModule
         fields = ('id', 'name', 'description', 'file_system_path')
 
 
-class StorageModuleRetrieveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StorageModule
-        fields = ('id', 'name', 'description', 'file_system_path')
+class StorageModulePostSerializer(StorageModuleSerializer):
+    pass
+
+
+class StorageModuleRetrieveSerializer(StorageModuleSerializer):
+    pass
 
 
 class StorageModuleListSerializer(serializers.ModelSerializer):
@@ -30,6 +33,3 @@ class StorageModuleOnlyIdSerializer(serializers.ModelSerializer):
     class Meta:
         model = StorageModule
         fields = ('id',)
-
-
-

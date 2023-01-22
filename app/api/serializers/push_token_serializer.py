@@ -2,25 +2,28 @@ from rest_framework import serializers
 
 from ..models import PushToken
 
-class PushTokenRetrieveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PushToken
-        exclude = ('created_with_user_agent',)
-
-class PushTokenListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PushToken
-        exclude = ('created_with_user_agent',)
-
 class PushTokenPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = PushToken
         fields = ('key',)
 
-class PushTokenGetShortSerializer(serializers.ModelSerializer):
+
+class PushTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = PushToken
         exclude = ('created_with_user_agent',)
+
+
+class PushTokenRetrieveSerializer(PushTokenSerializer):
+    pass
+
+class PushTokenListSerializer(PushTokenSerializer):
+    pass
+
+
+class PushTokenGetShortSerializer(PushTokenSerializer):
+    pass
+
 
 class PushTokenOnlyIdSerializer(serializers.ModelSerializer):
     class Meta:
