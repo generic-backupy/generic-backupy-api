@@ -3,7 +3,6 @@ from api.models import Secret
 from django.db import IntegrityError
 
 
-# Create your tests here.
 class TestModelBackup(TestCase):
 
     def setUp(self):

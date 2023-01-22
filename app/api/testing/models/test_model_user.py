@@ -5,7 +5,6 @@ from api.models import User
 from django.db import IntegrityError, DataError
 
 
-# Create your tests here.
 class TestModelUser(TestCase):
 
     def setUp(self):
