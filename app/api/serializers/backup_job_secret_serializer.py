@@ -14,32 +14,38 @@ class BackupJobSecretGbModuleSerializer(serializers.ModelSerializer):
     def get_name(self, current_object: BackupJobSecret):
         return current_object.secret.name
 
-
     class Meta:
         model = BackupJobSecret
         fields = ('id', 'key', 'secret', 'name')
 
 
-class BackupJobSecretPostSerializer(serializers.ModelSerializer):
+class BackupJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupJobSecret
         fields = ('id', 'key', 'backup_job', 'secret')
 
-class BackupJobSecretRetrieveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BackupJobSecret
-        fields = ('id', 'key', 'backup_job', 'secret')
 
-class BackupJobSecretListSerializer(serializers.ModelSerializer):
+class BackupJobSecretPostSerializer(BackupJobSerializer):
+    pass
 
+
+class BackupJobSecretRetrieveSerializer(BackupJobSerializer):
+    pass
+
+
+class BackupJobSecretBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupJobSecret
         fields = ('id', 'key')
 
-class BackupJobSecretGetShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BackupJobSecret
-        fields = ('id', 'key')
+
+class BackupJobSecretListSerializer(BackupJobSecretBaseSerializer):
+    pass
+
+
+class BackupJobSecretGetShortSerializer(BackupJobSecretBaseSerializer):
+    pass
+
 
 class BackupJobSecretOnlyIdSerializer(serializers.ModelSerializer):
     class Meta:
