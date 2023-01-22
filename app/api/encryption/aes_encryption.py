@@ -1,6 +1,6 @@
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
 from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import pad, unpad
 
 
 class EncryptionAES():
@@ -9,7 +9,7 @@ class EncryptionAES():
 
     def create_iv(self) -> bytes:
         return get_random_bytes(16)
-  
+
     def encrypt(self, data: str, key: bytes, iv: bytes) -> bytes:
         data = bytes(data, 'utf-8')
         # create AES cipher object
@@ -18,7 +18,6 @@ class EncryptionAES():
         encrypted = cipher.encrypt(padded_data)
 
         return encrypted
-
 
     def decrypt(self, encrypted: bytes, key: bytes, iv: bytes) -> str:
 
