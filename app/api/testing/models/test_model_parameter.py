@@ -34,3 +34,11 @@ class TestModelParameter(TestCase):
         self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
+
+    def test_str(self):
+        p = Parameter.objects.create(name="name", parameter={})
+        db = Parameter.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(p)
+        proper_str = f"{p.id} - name"
+        self.assertEqual(s, proper_str, "Error while creating string")

@@ -34,3 +34,11 @@ class TestModelBackup(TestCase):
         self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
+
+    def test_str(self):
+        secret = Secret.objects.create(name="name")
+        db = Secret.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(secret)
+        proper_str = f"{secret.id} - name"
+        self.assertEqual(s, proper_str, "Error while creating string")

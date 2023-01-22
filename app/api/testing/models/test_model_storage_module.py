@@ -30,8 +30,16 @@ class TestModelStorageModule(TestCase):
         self.assertEqual(db[0].file_system_path, "path", "Error in field 'file_system_path'")
 
     def test_delete(self):
-        StorageModule.objects.create()
+        StorageModule.objects.create(name="name")
         db = StorageModule.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
+
+    def test_str(self):
+        sm = StorageModule.objects.create(name="name")
+        db = StorageModule.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(sm)
+        proper_str = f"{sm.id} - name"
+        self.assertEqual(s, proper_str, "Error while creating string")

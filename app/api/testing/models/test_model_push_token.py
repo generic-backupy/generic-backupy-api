@@ -40,6 +40,15 @@ class TestModelPushToken(TestCase):
         db.delete()
         self.assertEqual(len(db), 0, "Error while deleting")
 
+    def test_str(self):
+        auth = create_user_auth_token()
+        p = PushToken.objects.create(key="key", auth_token=auth)
+        db = PushToken.objects.all()
+        self.assertEqual(len(db), 1, "Object not added to db")
+        s = str(p)
+        proper_str = "user - key"
+        self.assertEqual(s, proper_str, "Error while creating string")
+
 
 class TestModelPushTokenTrans(TransactionTestCase):
 
