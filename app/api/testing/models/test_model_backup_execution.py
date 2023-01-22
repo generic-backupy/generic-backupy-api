@@ -25,8 +25,7 @@ class TestModelBackupExecution(TestCase):
         db = BackupExecution.objects.all()
         self.assertEqual(len(db), 1, "Object not added to db")
         self.assertEqual(db[0].backup_job, dummy, "Error in field 'backup_job'")
-        # self.assertEqual(db[0].state, 1, "Wrong default value in field 'state'")
-        # commented out due to synchronisation problems
+        self.assertEqual(db[0].state, 0, "Wrong default value in field 'state'")
 
     def test_create_more_fields(self):
         dummy = self.create_dummy()
