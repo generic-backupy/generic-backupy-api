@@ -15,3 +15,4 @@ from .secret_view import *
 from .storage_execution_view import *
 from .storage_module_view import *
 from .system_view import *
+from .restore_execution_view import *
