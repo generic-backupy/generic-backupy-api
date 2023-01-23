@@ -1,20 +1,9 @@
-from unittest.mock import patch, Mock
-
-from api.testing.test_utils.backup_job_test_util import BackupJobTestUtil
-
-from api.models import Category, Backup, RestoreExecution, BackupModule, BackupExecution, StorageModule, \
-    BackupJobStorageModule
-from api.rq_tasks.restore import restore
-from api.testing.test_utils.category_test_util import CategoryTestUtil
-from api.utils.backup_util import BackupUtil
-from api.utils.category_util import CategoryUtil
-from api.utils.package_util import PackageUtil
-
-from api.views.base_view import UserCurrentConditionsPermission
-
-from api.views import BaseViewSet, CategoryViewSet
 from django.test import TestCase
-from api.utils.ExecutionUtil import ExecutionUtil
+
+from api.models import Backup, RestoreExecution, BackupModule, StorageModule, \
+    BackupJobStorageModule
+from api.testing.test_utils.backup_job_test_util import BackupJobTestUtil
+from api.utils.package_util import PackageUtil
 from gb_module.gb_module.core.base_result import BaseResult
 
 
