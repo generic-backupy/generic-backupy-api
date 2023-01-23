@@ -21,6 +21,7 @@ router.register(r'systems', SystemViewSet, basename="systems")
 router.register(r'categories', CategoryViewSet, basename="categories")
 router.register(r'parameters', ParameterViewSet, basename="parameters")
 router.register(r'secrets', SecretViewSet, basename="secrets")
+router.register(r'restore-executions', RestoreExecutionViewSet, basename="restore-executions")
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
