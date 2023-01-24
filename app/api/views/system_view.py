@@ -40,12 +40,4 @@ class SystemViewSet(BaseViewSet):
     def get_queryset(self):
         return System.objects.all()
 
-    @action(detail=False, methods=['get'], url_path='test')
-    def test(self, request, *args, **kwargs):
-
-        queue = get_queue('default')
-        job = queue.enqueue_at(datetime(2023, 1, 24, 15, 36), test)
-        job_id = job.id #str
-        return Response("hey")
-
 

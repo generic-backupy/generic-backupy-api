@@ -1,7 +1,11 @@
-from api.models import BackupJob, BackupJobSecret, BackupJobStorageModuleSecret, BackupJobStorageModule, Parameter
-from api.serializers import BackupJobSecretGbModuleSerializer, BackupJobStorageModuleSecretGbModuleSerializer, \
-    ParameterGbModuleSerializer
-
+from api.models.parameter import Parameter
+from api.models.backup import Backup
+from api.models.backup_job import BackupJob, BackupJobStorageModule, BackupJobSecret, BackupJobStorageModuleSecret
+from api.models.storage_execution import StorageExecution
+from api.models.backup_module import BackupModule
+from api.serializers.backup_job_secret_serializer import *
+from api.serializers.backup_job_storage_module_secret_serializer import *
+from api.serializers.parameter_serializer import *
 
 class BackupJobUtil:
 

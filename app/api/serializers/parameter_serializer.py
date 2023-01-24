@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Parameter
+from ..models.parameter import Parameter
 
 
 class ParameterSerializer(serializers.ModelSerializer):

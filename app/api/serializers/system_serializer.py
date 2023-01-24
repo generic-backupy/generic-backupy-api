@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import System
+from ..models.system import System
 
 
 class SystemSerializer(serializers.ModelSerializer):

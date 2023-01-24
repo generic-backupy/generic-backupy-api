@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import BackupJobStorageModuleSecret
+from ..models.backup_job import BackupJobStorageModuleSecret
 from .secret_serializer import SecretGbModuleSerializer
 
 
