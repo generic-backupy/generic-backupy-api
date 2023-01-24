@@ -7,19 +7,42 @@ networks:
 services:
   api:
     restart: always
-    volumes:
-      - ../app:/code
     build:
       context: ..
       dockerfile: docker/python/Dockerfile
     image: generic-backupy/api
-    container_name: generic-backupy-api
+    container_name: generic-backupy-api-local
+    volumes:
+      - ../app:/code
+      - ../redis:/redis
+      - ../packages:/packages
     env_file:
-      - ../.env
       - ../postgres.env
       - ../django.env
+      - ../redis.env
     command: uwsgi --http "0.0.0.0:8001" --module genericbackupy.wsgi --master --processes ${UWSGI_PROCESSES} --threads ${UWSGI_THREADS} --check-static /code/genericbackupy/
     ports:
       - ${API_MAPPING_PORT}:8001
+    networks:
+      - generic-backupy-api-network
+  rq-worker:
+    restart: always
+    build:
+      context: ..
+      dockerfile: docker/python/Dockerfile
+    image: generic-backupy/api
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - ../app:/code
+      - ../backup_temp:/backup_temp
+      - ../packages:/packages
+    env_file:
+      - ../postgres.env
+      - ../django.env
+      - ../redis.env
+    command: python3 manage.py rqworker default --with-scheduler
     networks:
       - generic-backupy-api-network

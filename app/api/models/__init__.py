@@ -13,3 +13,4 @@ from .backup_execution import *
 from .storage_execution import *
 from .restore_execution import *
 from .parameter import *
+from .module_installation_execution import *

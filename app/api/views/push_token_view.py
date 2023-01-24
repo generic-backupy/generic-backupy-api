@@ -40,7 +40,6 @@ class PushTokenViewSet(BaseViewSet):
         return PushToken.objects.filter(auth_token__user=self.request.user)
 
     def perform_create(self, serializer):
-        self.add_user_agent_to_serializer(serializer)
         serializer.save(auth_token=self.request.auth)
 
     @action(detail=False, methods=['get'], url_path='test')

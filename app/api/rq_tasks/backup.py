@@ -1,16 +1,19 @@
 from django_rq import job
 import django_rq
 from api.models import Backup, BackupJob, BackupJobSecret, BackupJobStorageModule, Secret, BackupExecution, Parameter, \
-    StorageExecution, System
+    StorageExecution, System, BackupModule
 import time
 from django.utils.timezone import now
 
 from api.utils.backup_job_util import BackupJobUtil
 from api.utils.package_util import PackageUtil
 from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerializer, SystemGbModuleSerializer
+import sys
+import os
+from pathlib import Path
 
 @job
-def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStorageModule], user, backup_execution):
+def backup(backup_job: BackupJob, backup_module: BackupModule, storage_modules: [BackupJobStorageModule], user, backup_execution):
     # start a backup_execution
     backup_execution.state = 1
     backup_execution.save()
@@ -18,6 +21,7 @@ def backup(backup_job: BackupJob, backup_module, storage_modules: [BackupJobStor
     package_instance = None
     do_backup_response = None
     system_dict = SystemGbModuleSerializer(backup_job.system).data
+
     # get an instance of the plugin
     try:
         package_instance = PackageUtil.get_python_class_of_module(backup_module)()

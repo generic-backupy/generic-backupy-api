@@ -102,3 +102,37 @@ This can happen, if there are two much docker networks, or if the network range 
 range of the local network.
 
 For the first case execute `docker network prune` and restart the containers (down and up)
+
+## Production Deployment
+Clone the project
+```
+git clone https://github.com/generic-backupy/generic-backupy-api.git
+cd generic-backupy-api
+```
+
+Copy the .env files manually or use the sh script `./setup-env.sh`
+```
+cp .env.example .env
+cp django.env.example django.env
+cp postgres.env.example postgres.env
+cp redis.env.example redis.env
+```
+
+
+After that, change the port in postgres.env to the postgres mappping port
+from .env, because the db should be deployed externally, and they use
+different docker networks.
+Also use the ip address of the machine, where you deploy the database for the host
+in postgres.env
+
+
+After that, change the port in the redis.env file to the mapping port of the .env file.
+Also change the host to the ip address of the machine. Also enable tls in the
+redis.env file.
+
+### Generate the SSL Keys
+To protect the communication with redis and postgres, you need to provide
+ssl certificates for it.
+
+#### Postgres
+You need to change the user for the server files to the user id 999 (postgres) with `chown 999 server.crt`
