@@ -5,7 +5,7 @@ from .backup_job import BackupJobStorageModule
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
-from django_rq.queues import get_queue
+import django_rq.queues
 from ..base import BaseModel
 from django.conf import settings
 from .backup_execution import BackupExecution
@@ -15,6 +15,7 @@ from .backup_execution import BackupExecution
 ModelClass for a Backup Schedule, to schedule backupjobs
 """
 class BackupSchedule(BaseModel):
+    get_queue = django_rq.queues.get_queue
     name = models.TextField(null=False)
     description = models.TextField(null=True, blank=True, default=None)
     each_nth_minute = models.IntegerField(default=60*60*24) # default each day
@@ -64,11 +65,11 @@ class BackupSchedule(BaseModel):
 
     def create_scheduled_rq_job(self, at_time):
         from api.rq_tasks.schedule_backup import schedule
-        queue = get_queue('default')
+        queue = BackupSchedule.get_queue('default')
         return queue.enqueue_at(at_time, schedule, self.backup_job, self.created_by, self)
 
     def remove_qr_job(self):
-        queue = get_queue('default')
+        queue = BackupSchedule.get_queue('default')
         try:
             queue.remove(self.current_scheduling_job_id)
         except Exception as e:
