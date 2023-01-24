@@ -1,7 +1,8 @@
 from django.test import TestCase
 from api.serializers import BackupJobStorageModulePostSerializer
-from api.models import BackupJob, Parameter, Secret, StorageModule
-from api.models.backup_job import *
+from api.models import Parameter, Secret, StorageModule
+from api.models.backup_job import BackupJob, BackupJobStorageModuleSecret, BackupJobStorageModule, \
+    BackupJobStorageModuleParameter
 
 
 class TestSerializerBackupJobStorageModule(TestCase):
@@ -78,7 +79,7 @@ class TestSerializerBackupJobStorageModule(TestCase):
         b = BackupJobStorageModulePostSerializer().create({'backup_job': backup_db[0],
                                                            'storage_module': storage_db[0],
                                                            'parameter': param_db,
-                                                           'secret':secret_db})
+                                                           'secret': secret_db})
         BackupJobStorageModuleParameter.objects.create(backup_job_storage_module=test, parameter=param_db[0])
         BackupJobStorageModuleSecret.objects.create(backup_job_storage_module=test, secret=secret_db[0])
         self.common_assertions(b, test)

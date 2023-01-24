@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from ..serializers.parameter_serializer import *
-from ..serializers.secret_serializer import *
-from ..models.backup_job import *
+from ..serializers.parameter_serializer import ParameterListSerializer, ParameterPostSerializer, ParameterRetrieveSerializer
+from ..serializers.secret_serializer import SecretListSerializer, SecretPostSerializer, SecretRetrieveSerializer
+from ..models.backup_job import BackupJobStorageModule
 
 
 class BackupJobStorageModuleSerializer(serializers.ModelSerializer):
