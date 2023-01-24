@@ -1,7 +1,7 @@
 from django.test import TestCase
 from api.serializers import BackupJobPostSerializer
 from api.models import System, BackupModule, Parameter, Secret, StorageModule
-from api.models.backup_job import *
+from api.models.backup_job import BackupJob, BackupJobSecret, BackupJobParameter, BackupJobStorageModule
 
 
 class TestSerializerBackupJob(TestCase):
