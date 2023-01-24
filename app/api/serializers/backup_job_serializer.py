@@ -29,6 +29,20 @@ class BackupJobPostSerializer(BackupJobSerializer):
     parameters = ParameterPostSerializer(source="backup_module_parameters", many=True, required=False)
     storage_module = StorageModulePostSerializer(source="storage_modules", many=True, required=False)
 
+    def create(self, validated_data):
+        bjsm = BackupJob.objects.create(name=validated_data['name'],
+                                        description=validated_data['description'],
+                                        additional_information=validated_data['additional_information'],
+                                        system=validated_data['system'],
+                                        backup_module=validated_data['backup_module'])
+        if 'secrets' in validated_data.keys():
+            bjsm.secrets.add(validated_data['secrets'])
+        if 'parameter' in validated_data.keys():
+            bjsm.parameters.add(validated_data['parameters'])
+        if 'storage_module' in validated_data.keys():
+            bjsm.storage_module.add(validated_data['storage_module'])
+        return bjsm
+
 
 class BackupJobBaseSerializer(serializers.ModelSerializer):
     class Meta:
