@@ -17,3 +17,4 @@ from .storage_module_view import *
 from .system_view import *
 from .restore_execution_view import *
 from .backup_schedule_view import *
+from .backup_job_storage_module_view import *
