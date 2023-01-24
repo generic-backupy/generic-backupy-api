@@ -23,26 +23,34 @@ class BackupJobStorageModuleSecretGbModuleSerializer(serializers.ModelSerializer
         fields = ('id', 'key', 'secret', 'name')
 
 
-class BackupJobStorageModuleSecretPostSerializer(serializers.ModelSerializer):
+class BackupJobStorageModuleSecretSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupJobStorageModuleSecret
         fields = ('id', 'key', 'backup_job', 'secret')
 
-class BackupJobStorageModuleSecretRetrieveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BackupJobStorageModuleSecret
-        fields = ('id', 'key', 'backup_job', 'secret')
 
-class BackupJobStorageModuleSecretListSerializer(serializers.ModelSerializer):
+class BackupJobStorageModuleSecretPostSerializer(BackupJobStorageModuleSecretSerializer):
+    pass
+
+
+class BackupJobStorageModuleSecretRetrieveSerializer(BackupJobStorageModuleSecretSerializer):
+    pass
+
+
+class BackupJobStorageModuleSecretBaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BackupJobStorageModuleSecret
         fields = ('id', 'key')
 
-class BackupJobStorageModuleSecretGetShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BackupJobStorageModuleSecret
-        fields = ('id', 'key')
+
+class BackupJobStorageModuleSecretListSerializer(BackupJobStorageModuleSecretBaseSerializer):
+    pass
+
+
+class BackupJobStorageModuleSecretGetShortSerializer(BackupJobStorageModuleSecretBaseSerializer):
+    pass
+
 
 class BackupJobStorageModuleSecretOnlyIdSerializer(serializers.ModelSerializer):
     class Meta:

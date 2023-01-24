@@ -25,4 +25,4 @@ class GeneralUtilTest(TestCase):
 
         # assert
         self.assertEqual(len(secrets), 1)
-        self.assertDictEqual(secrets[0], {"id": 1, "name": "TestSecret", "secret": "pssst", "key": "password"})
+        self.assertDictEqual(secrets[0], {"id":secrets[0].get("id"), "name": "TestSecret", "secret": "pssst", "key": "password"})

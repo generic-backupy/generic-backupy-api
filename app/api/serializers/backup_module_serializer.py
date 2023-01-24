@@ -1,9 +1,9 @@
-from ..models import BackupModule
 from rest_framework import serializers
+from ..models import BackupModule
+
 
 class BackupModulePostSerializer(serializers.ModelSerializer):
     file_uploaded = serializers.FileField()
-
     class Meta:
         model = BackupModule
         fields = ('file_uploaded',)
@@ -12,7 +12,7 @@ class BackupModulePostSerializer(serializers.ModelSerializer):
 class BackupModuleRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupModule
-        fields = ('id', 'name', 'description', 'file_system_path')
+        fields = ('id', 'name', 'description')
 
 
 class BackupModuleListSerializer(serializers.ModelSerializer):
@@ -25,6 +25,7 @@ class BackupModuleShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackupModule
         fields = ('id', 'name')
+
 
 class BackupOnlyIdSerializer(serializers.ModelSerializer):
     class Meta:

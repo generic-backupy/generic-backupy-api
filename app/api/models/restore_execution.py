@@ -1,7 +1,4 @@
-from api.models import BackupExecution
-from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Q
 
 from ..base import BaseModel
 from django.conf import settings
@@ -35,6 +32,9 @@ class RestoreExecution(BaseModel):
     ordering = []
 
     def __str__(self):
-        return f"{self.id} - {ExecutionUtil.get_state_string(self.state)}" \
-               f" - {self.backup_instance.name}"
+        if self.backup_instance is not None:
+            return f"{self.id} - {ExecutionUtil.get_state_string(self.state)}" \
+                   f" - {self.backup_instance.name}"
+        else:
+            return f"{self.id} - {ExecutionUtil.get_state_string(self.state)}"
 
