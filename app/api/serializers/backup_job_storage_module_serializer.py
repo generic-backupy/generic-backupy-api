@@ -15,7 +15,7 @@ class BackupJobStorageModuleSerializer(serializers.ModelSerializer):
 
 
 class BackupJobStorageModulePostSerializer(BackupJobStorageModuleSerializer):
-    secret = SecretPostSerializer(source="secrets", many=True)
+    secret = SecretPostSerializer(source="secrets", many=True, required=False)
     parameter = ParameterPostSerializer(source="parameters", many=True)
 
 

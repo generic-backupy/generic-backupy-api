@@ -7,12 +7,10 @@ from ..serializers.parameter_serializer import *
 from ..serializers.storage_module_serializer import *
 
 
-
 class BackupJobSerializer(serializers.ModelSerializer):
-    secrets = SecretListSerializer(source="backup_module_secrets",many=True)
-    parameters = ParameterListSerializer(source="backup_module_parameters",many=True)
+    secrets = SecretListSerializer(source="backup_module_secrets", many=True)
+    parameters = ParameterListSerializer(source="backup_module_parameters", many=True)
     storage_module = StorageModuleListSerializer(source="storage_modules", many=True)
-
 
     class Meta:
         model = BackupJob
@@ -27,13 +25,12 @@ class BackupJobRetrieveSerializer(BackupJobSerializer):
 
 
 class BackupJobPostSerializer(BackupJobSerializer):
-    secrets = SecretPostSerializer(source="backup_module_secrets", many=True)
-    parameters = ParameterPostSerializer(source="backup_module_parameters", many=True)
-    storage_module = StorageModuleRetrieveSerializer(source="storage_modules", many=True)
+    secrets = SecretPostSerializer(source="backup_module_secrets", many=True, required=False)
+    parameters = ParameterPostSerializer(source="backup_module_parameters", many=True, required=False)
+    storage_module = StorageModulePostSerializer(source="storage_modules", many=True)
 
 
 class BackupJobBaseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = BackupJob
         fields = ('id', 'name')
