@@ -21,4 +21,4 @@ services:
       - ../redis/tls:/tls
     networks:
       - generic-backupy-network-redis
-      - restart always
+    restart: always

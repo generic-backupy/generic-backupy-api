@@ -33,10 +33,21 @@ def install_module(filename, install_execution: ModuleInstallationExecution, mod
 
         # if there is only one folder in it, use this folder as the right one
         install_execution.log(f"listdir: {os.listdir(path)}, {len(os.listdir(path))}")
-        if len(os.listdir(path)) == 1:
-            install_execution.log(f"execute: mv {path.joinpath(os.listdir(str(path))[0])}/* {path}")
-            os.system(f"mv {path.joinpath(os.listdir(str(path))[0])}/* {path}")
-            os.system(f"rm -rf {path.joinpath(os.listdir(str(path))[0])}")
+        if "gb.json" not in os.listdir(path):
+            gbjson_found = True
+            for dir in os.listdir(str(path)):
+                cpath = Path(path).joinpath(dir)
+                if cpath.is_dir():
+                    if "gb.json" in os.listdir(cpath):
+                        gbjson_found = True
+                        install_execution.log(f"execute: mv {cpath}/* {path}")
+                        os.system(f"mv \"{cpath}\"/* \"{path}\"")
+                        os.system(f"rm -rf \"{cpath}\"")
+                        break
+            if not gbjson_found:
+                install_execution.state = 2
+                install_execution.log("no gb.json file found!")
+                return
 
     # create the module object
     if module_type == 1:

@@ -10,6 +10,7 @@ RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev g++
 #RUN apt-get update && apt-get install --assume-yes gcc python3-dev musl-dev libffi-dev
 RUN ln -fs /usr/bin/python3 /usr/bin/python
 RUN pip install --upgrade pip
+RUN pip install --no-binary :all: psycopg2
 COPY docker/python/requirements.txt .
 RUN pip install -r requirements.txt
 COPY docker/python/install-packages.sh .
