@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 from ..serializers.backup_schedule_serializer import *
 
 User = get_user_model()
-from api.rq_tasks.test import test
 from django_rq.queues import get_queue
 
 
@@ -39,13 +38,5 @@ class BackupScheduleViewSet(BaseViewSet):
 
     def get_queryset(self):
         return BackupSchedule.objects.all()
-
-    @action(detail=False, methods=['get'], url_path='test')
-    def test(self, request, *args, **kwargs):
-
-        queue = get_queue('default')
-        job = queue.enqueue_at(datetime(2023, 1, 24, 15, 36), test)
-        job_id = job.id #str
-        return Response("hey")
 
 

@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 from ..serializers.system_serializer import *
 
 User = get_user_model()
-from api.rq_tasks.test import test
 from django_rq.queues import get_queue
 
 
