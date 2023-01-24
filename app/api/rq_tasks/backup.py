@@ -1,13 +1,16 @@
 from django_rq import job
 import django_rq
-from api.models import Backup, BackupJob, BackupJobSecret, BackupJobStorageModule, Secret, BackupExecution, Parameter, \
-    StorageExecution, System, BackupModule
+from api.models.backup import Backup
+from api.models.backup_job import BackupJob, BackupJobStorageModule
+from api.models.storage_execution import StorageExecution
+from api.models.backup_module import BackupModule
 import time
 from django.utils.timezone import now
 
 from api.utils.backup_job_util import BackupJobUtil
 from api.utils.package_util import PackageUtil
-from api.serializers import SecretGbModuleSerializer, ParameterGbModuleSerializer, SystemGbModuleSerializer
+from api.serializers.secret_serializer import *
+from api.serializers.system_serializer import *
 import sys
 import os
 from pathlib import Path
@@ -28,9 +31,15 @@ def backup(backup_job: BackupJob, backup_module: BackupModule, storage_modules: 
     except FileNotFoundError as e:
         print("file not found error at loading backup_instance")
         backup_execution.errors = f"file not found error: {e}"
+        backup_execution.state = 2
+        backup_execution.save()
+        return
     except Exception as e:
         print("error at loading backup_instance")
         backup_execution.errors = f"file not found error: {e}"
+        backup_execution.state = 2
+        backup_execution.save()
+        return
 
     if not package_instance:
         backup_execution.save()

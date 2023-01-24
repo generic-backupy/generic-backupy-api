@@ -12,3 +12,4 @@ from .backup_job_storage_module_secret_serializer import *
 from .storage_execution_serializer import *
 from .backup_serializer import *
 from .restore_execution_serializer import *
+from .backup_schedule_serializer import *

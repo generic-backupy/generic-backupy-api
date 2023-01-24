@@ -22,6 +22,7 @@ router.register(r'categories', CategoryViewSet, basename="categories")
 router.register(r'parameters', ParameterViewSet, basename="parameters")
 router.register(r'secrets', SecretViewSet, basename="secrets")
 router.register(r'restore-executions', RestoreExecutionViewSet, basename="restore-executions")
+router.register(r'backup-schedules', BackupScheduleViewSet, basename="backup-schedules")
 router.register(r'backup-jobs-storage-module', BackupJobStorageModuleViewSet, basename="backup-jobs-storage-module")
 
 # Wire up our API using automatic URL routing.
