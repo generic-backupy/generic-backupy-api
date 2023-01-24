@@ -210,7 +210,6 @@ app/*dump.json
 *.env
 django.env
 postgres.env
-redis.env
 *.crt
 *.key
 
@@ -225,3 +224,4 @@ debug_temp
 
 packages/*
 !packages/.gitkeep
+redis.env
