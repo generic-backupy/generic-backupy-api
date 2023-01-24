@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import BackupJob
+from ..models.backup_job import *
 from ..serializers.backup_job_storage_module_serializer import *
 from ..serializers.secret_serializer import *
 from ..serializers.parameter_serializer import *
@@ -30,18 +30,18 @@ class BackupJobPostSerializer(BackupJobSerializer):
     storage_module = StorageModulePostSerializer(source="storage_modules", many=True, required=False)
 
     def create(self, validated_data):
-        bjsm = BackupJob.objects.create(name=validated_data['name'],
+        bj = BackupJob.objects.create(name=validated_data['name'],
                                         description=validated_data['description'],
                                         additional_information=validated_data['additional_information'],
                                         system=validated_data['system'],
                                         backup_module=validated_data['backup_module'])
         if 'secrets' in validated_data.keys():
-            bjsm.secrets.add(validated_data['secrets'])
-        if 'parameter' in validated_data.keys():
-            bjsm.parameters.add(validated_data['parameters'])
+            bj.backup_module_secrets.set(validated_data['secrets'])
+        if 'parameters' in validated_data.keys():
+            bj.backup_module_parameters.set(validated_data['parameters'])
         if 'storage_module' in validated_data.keys():
-            bjsm.storage_module.add(validated_data['storage_module'])
-        return bjsm
+            bj.storage_modules.set(validated_data['storage_module'])
+        return bj
 
 
 class BackupJobBaseSerializer(serializers.ModelSerializer):

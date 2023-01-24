@@ -22,9 +22,9 @@ class BackupJobStorageModulePostSerializer(BackupJobStorageModuleSerializer):
         bjsm = BackupJobStorageModule.objects.create(backup_job=validated_data['backup_job'],
                                                      storage_module=validated_data['storage_module'])
         if 'secret' in validated_data.keys():
-            bjsm.secrets.add(validated_data['secret'])
+            bjsm.secrets.set(validated_data['secret'])
         if 'parameter' in validated_data.keys():
-            bjsm.parameters.add(validated_data['parameter'])
+            bjsm.parameters.set(validated_data['parameter'])
         return bjsm
 
 
