@@ -1,38 +1,27 @@
 from rest_framework import serializers
 
+from ..serializers.parameter_serializer import *
+from ..serializers.secret_serializer import *
 from ..models import BackupJobStorageModule
 
 
 class BackupJobStorageModuleSerializer(serializers.ModelSerializer):
-    secrets = serializers.SerializerMethodField('get_list_of_secrets')
-    parameters = serializers.SerializerMethodField('get_list_of_parameters')
-
-    def get_list_of_secrets(self, current_object: BackupJobStorageModule):
-        secrets = list(current_object.secrets.all())
-        ans = []
-        for s in secrets:
-            ans.append([s.id, s.name])
-        return ans
-
-    def get_list_of_parameters(self, current_object: BackupJobStorageModule):
-        params = list(current_object.parameters.all())
-        ans = []
-        for p in params:
-            ans.append([p.id, p.name])
-
-        return ans
+    secret = SecretListSerializer(source="secrets", many=True)
+    parameter = ParameterListSerializer(source="parameters", many=True)
 
     class Meta:
         model = BackupJobStorageModule
-        fields = ('id', 'backup_job', 'storage_module', 'secrets', 'parameters')
+        fields = ('id', 'backup_job', 'storage_module', 'secret', 'parameter')
 
 
 class BackupJobStorageModulePostSerializer(BackupJobStorageModuleSerializer):
-    pass
+    secret = SecretPostSerializer(source="secrets", many=True)
+    parameter = ParameterPostSerializer(source="parameters", many=True)
 
 
 class BackupJobStorageModuleRetrieveSerializer(BackupJobStorageModuleSerializer):
-    pass
+    secret = SecretRetrieveSerializer(source="secrets", many=True)
+    parameter = ParameterRetrieveSerializer(source="parameters", many=True)
 
 
 class BackupJobStorageModuleBaseSerializer(serializers.ModelSerializer):
