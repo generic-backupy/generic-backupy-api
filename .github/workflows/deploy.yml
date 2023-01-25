@@ -1,0 +1,23 @@
+name: upload
+
+# trigger on main branch, if the build workflow succeeded
+on:
+  workflow_run:
+    workflows: [ "CI build" ]
+    types:
+      - completed
+    branches: [ main ]
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /opt/generic-backupy-api
+          ./server-update-full.sh
