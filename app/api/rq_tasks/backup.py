@@ -35,8 +35,8 @@ def backup(backup_job: BackupJob, backup_module: BackupModule, storage_modules: 
         backup_execution.save()
         return
     except Exception as e:
-        print("error at loading backup_instance")
-        backup_execution.errors = f"file not found error: {e}"
+        print(f"error at loading backup_instance: {e}")
+        backup_execution.errors = f"module loading error: {e}"
         backup_execution.state = 2
         backup_execution.save()
         return

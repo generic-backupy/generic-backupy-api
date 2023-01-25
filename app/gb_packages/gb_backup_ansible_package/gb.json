@@ -1,0 +1,11 @@
+{
+  "module_name": "Test Module",
+  "module_version": "0.0.1",
+  "module_description": "Module for Test purposes",
+  "module_author": "Martin Rader",
+  "module_class_name": "GBModule",
+  "module_class_file": "module.py",
+  "module_installation_scripts": [
+    "scripts/install-dependencies.sh"
+  ]
+}

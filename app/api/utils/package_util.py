@@ -113,10 +113,15 @@ class PackageUtil:
     @staticmethod
     def get_python_class_of_module(backup_module: BackupModule):
         backup_class = None
-        # TODO: change the GBModule to the name which is specified in the modules gb.json file.
-        # TODO: also replace the python module file name
         module_name = "GBModule"
         module_file = "gb_module.py"
+        print(f"module config: {backup_module.module_config}")
+        if backup_module.module_config:
+            module_name = backup_module.module_config.get("module_class_name") or module_name
+            module_file = backup_module.module_config.get("module_class_file") or module_file
+
+        print(f"module file: {module_file}, {module_name}")
+
         file_system_path = backup_module.file_system_path
         # load venv
         PackageUtil.load_venv(file_system_path)

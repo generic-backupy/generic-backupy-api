@@ -12,3 +12,4 @@ django-rq>=2.6.0,<3.0
 selenium>=4.7.2,<5.0
 django-nose>=1.4.7,<2.0
 coverage>=6.5.0,<7.0
+ansible>=7.1.0,<8.0
