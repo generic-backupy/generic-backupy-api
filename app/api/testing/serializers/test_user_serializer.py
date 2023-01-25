@@ -59,4 +59,3 @@ class TestUserSerializer(TestCase):
         serializer = UserListSerializer(self.user)
         self.assertTrue(serializer.is_valid())
         self.assertEqual(serializer.data['username'], 'test_user')
-
