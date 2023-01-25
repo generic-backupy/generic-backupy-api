@@ -15,3 +15,4 @@ COPY docker/python/requirements.txt .
 RUN pip install -r requirements.txt
 COPY docker/python/install-packages.sh .
 RUN /bin/sh install-packages.sh
+ENV PYTHONPATH="${PYTHONPATH}:/gb_module"

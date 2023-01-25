@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from gb_module.gb_module.core.backup_module import BackupModule
-from gb_module.gb_module.core.backup_result import BackupResult
+from gb_module.core.backup_module import BackupModule
+from gb_module.core.backup_result import BackupResult
 import os
 
 from gb_packages.tp_link_eap245_package.utils.backup_fetcher import BackupFetcher

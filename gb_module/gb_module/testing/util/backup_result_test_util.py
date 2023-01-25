@@ -1,5 +1,4 @@
-from gb_module.gb_module.core.backup_result import BackupResult
-
+from gb_module.core.backup_result import BackupResult
 
 class BackupResultTestUtil:
 

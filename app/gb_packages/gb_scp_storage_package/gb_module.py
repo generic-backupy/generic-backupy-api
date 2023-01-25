@@ -1,10 +1,10 @@
 import os
 import shutil
 
-from gb_module.gb_module.core.retrieve_result import RetrieveResult
-from gb_module.gb_module.core.storage_module import StorageModule
-from gb_module.gb_module.core.backup_result import BackupResult
-from gb_module.gb_module.core.storage_result import StorageResult
+from gb_module.core.retrieve_result import RetrieveResult
+from gb_module.core.storage_module import StorageModule
+from gb_module.core.backup_result import BackupResult
+from gb_module.core.storage_result import StorageResult
 from pathlib import Path
 import subprocess
 

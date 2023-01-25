@@ -4,7 +4,7 @@ from api.models import Backup, RestoreExecution, BackupModule, StorageModule, \
     BackupJobStorageModule
 from api.testing.test_utils.backup_job_test_util import BackupJobTestUtil
 from api.utils.package_util import PackageUtil
-from gb_module.gb_module.core.base_result import BaseResult
+from gb_module.core.base_result import BaseResult
 
 
 class TestPackageUtil(TestCase):

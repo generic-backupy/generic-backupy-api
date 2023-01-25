@@ -1,9 +1,9 @@
-from gb_module.gb_module.core.backup_module import BackupModule
-from gb_module.gb_module.core.backup_result import BackupResult
+from gb_module.core.backup_module import BackupModule
+from gb_module.core.backup_result import BackupResult
 import time
 
-from gb_module.gb_module.core.restore_result import RestoreResult
-from gb_module.gb_module.core.retrieve_result import RetrieveResult
+from gb_module.core.restore_result import RestoreResult
+from gb_module.core.retrieve_result import RetrieveResult
 
 
 class GBModule(BackupModule):

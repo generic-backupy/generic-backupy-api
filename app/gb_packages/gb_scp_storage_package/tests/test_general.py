@@ -1,8 +1,8 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
 
-from gb_module.gb_module.testing.util.module_test_util import ModuleTestUtil
-from gb_module.gb_module.testing.util.backup_result_test_util import *
+from gb_module.testing.util.module_test_util import ModuleTestUtil
+from gb_module.testing.util.backup_result_test_util import *
 from ..gb_module import *
 
 # models test

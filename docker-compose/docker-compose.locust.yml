@@ -46,12 +46,14 @@ services:
       - ../redis:/redis
       - ../debug_temp:/debug_temp
       - ../packages:/packages
+      - ../gb_module:/gb_module
     env_file:
       - ../postgres.env
       - ../django.env
       - ../redis.env
     environment:
       - DJANGO_SETTINGS_MODULE=genericbackupy.settings.locust
+      - PYTHONPATH=/code:/gb_module:$PYTHONPATH
     command: uwsgi --http "0.0.0.0:8000" --module genericbackupy.wsgi --master --processes ${UWSGI_PROCESSES} --threads ${UWSGI_THREADS} --check-static /code/genericbackupy/ --listen 4096 --max-fd 120000
     ports:
       - ${API_MAPPING_PORT}:8000
@@ -73,10 +75,13 @@ services:
       - ../backup_temp:/backup_temp
       - ../debug_temp:/debug_temp
       - ../packages:/packages
+      - ../gb_module:/gb_module
     env_file:
       - ../postgres.env
       - ../django.env
       - ../redis.env
+    environment:
+      - PYTHONPATH=/code:/gb_module:$PYTHONPATH
     command: python3 manage.py rqworker default --with-scheduler
     depends_on:
       - db

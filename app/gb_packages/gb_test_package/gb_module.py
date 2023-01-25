@@ -1,5 +1,5 @@
-from gb_module.gb_module.core.backup_module import BackupModule
-from gb_module.gb_module.core.backup_result import BackupResult
+from gb_module.core.backup_module import BackupModule
+from gb_module.core.backup_result import BackupResult
 import time
 
 class GBModule(BackupModule):

@@ -1,9 +1,9 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
 import time
-from gb_module.gb_module.utils.selenium_util import SeleniumUtil
+from gb_module.utils.selenium_util import SeleniumUtil
 
-from gb_module.gb_module.testing.util.module_test_util import ModuleTestUtil
+from gb_module.testing.util.module_test_util import ModuleTestUtil
 from ..gb_module import *
 
 class GeneralTest(TestCase):
