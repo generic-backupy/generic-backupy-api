@@ -1,9 +1,9 @@
-name: upload
+name: deploy
 
 # trigger on main branch, if the build workflow succeeded
 on:
   workflow_run:
-    workflows: [ "CI build" ]
+    workflows: [ "quality" ]
     types:
       - completed
     branches: [ main ]
