@@ -1,0 +1,85 @@
+version: "3.9"
+
+networks:
+  generic-backupy-network-local:
+    name: generic-backupy-network-local
+
+volumes:
+  generic-backupy-db-volume-local:
+    name: generic-backupy-db-volume-local
+  generic-backupy-redis-volume-local:
+    name: generic-backupy-redis-volume-local
+
+services:
+  redis:
+    image: bitnami/redis:7.0
+    user: "${UID}:${GID}"
+    env_file:
+      - ../redis.env
+    ports:
+      - ${REDIS_MAPPING_PORT}:6379
+    volumes:
+      - generic-backupy-redis-volume-local:/bitnami/redis/data
+      - ../redis/tls:/tls
+    networks:
+      - generic-backupy-network-local
+  db:
+    image: postgres:14.5
+    container_name: generic-backupy-api-db-local
+    env_file:
+      - ../postgres.env
+    ports:
+      - ${POSTGRES_MAPPING_PORT}:5432
+    volumes:
+      - generic-backupy-db-volume-local:/var/lib/postgresql/data
+    networks:
+      - generic-backupy-network-local
+    command: postgres -N 10000
+  api:
+    build:
+      context: ..
+      dockerfile: docker/python/Dockerfile
+    image: generic-backupy/api
+    container_name: generic-backupy-api-local
+    volumes:
+      - ../app:/code
+      - ../redis:/redis
+      - ../debug_temp:/debug_temp
+      - ../packages:/packages
+    env_file:
+      - ../postgres.env
+      - ../django.env
+      - ../redis.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=genericbackupy.settings.locust
+    command: uwsgi --http "0.0.0.0:8000" --module genericbackupy.wsgi --master --processes ${UWSGI_PROCESSES} --threads ${UWSGI_THREADS} --check-static /code/genericbackupy/ --listen 4096 --max-fd 120000
+    ports:
+      - ${API_MAPPING_PORT}:8000
+    depends_on:
+      - db
+    networks:
+      - generic-backupy-network-local
+  rq-worker:
+    build:
+      context: ..
+      dockerfile: docker/python/Dockerfile
+    image: generic-backupy/api
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - ../app:/code
+      - ../backup_temp:/backup_temp
+      - ../debug_temp:/debug_temp
+      - ../packages:/packages
+    env_file:
+      - ../postgres.env
+      - ../django.env
+      - ../redis.env
+    command: python3 manage.py rqworker default --with-scheduler
+    depends_on:
+      - db
+      - redis
+    networks:
+      - generic-backupy-network-local
