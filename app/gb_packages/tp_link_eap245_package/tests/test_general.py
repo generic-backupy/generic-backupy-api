@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from gb_module.gb_module.testing.util.module_test_util import ModuleTestUtil
+from gb_module.testing.util.module_test_util import ModuleTestUtil
 from ..gb_module import *
 
 class GeneralTest(TestCase):

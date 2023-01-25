@@ -1,4 +1,4 @@
-from gb_module.gb_module.core.base_result import BaseResult
+from .base_result import BaseResult
 
 
 class RetrieveResult(BaseResult):

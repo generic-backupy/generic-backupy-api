@@ -1,14 +1,7 @@
 import time
-from unittest.mock import patch, Mock
 
-from api.testing.test_utils.backup_job_test_util import BackupJobTestUtil
-
-from api.models import Backup, RestoreExecution, BackupModule, StorageModule, \
-    BackupJobStorageModule, BackupExecution, ModuleInstallationExecution
-from api.testing.test_utils.module_test_util import ModuleTestUtil
-from api.utils.package_util import PackageUtil
+from api.models import BackupModule, ModuleInstallationExecution
 from django.test import TestCase
-from gb_module.gb_module.core.base_result import BaseResult
 from api.rq_tasks.module_installation import install_module
 import os
 

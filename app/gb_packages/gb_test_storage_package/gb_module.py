@@ -1,6 +1,6 @@
-from gb_module.gb_module.core.storage_module import StorageModule
-from gb_module.gb_module.core.backup_result import BackupResult
-from gb_module.gb_module.core.storage_result import StorageResult
+from gb_module.core.storage_module import StorageModule
+from gb_module.core.backup_result import BackupResult
+from gb_module.core.storage_result import StorageResult
 import time
 
 class GBModule(StorageModule):

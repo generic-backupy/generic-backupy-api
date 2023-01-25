@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from gb_module.gb_module.core.backup_module import BackupModule
-from gb_module.gb_module.core.backup_result import BackupResult
+from gb_module.core.backup_module import BackupModule
+from gb_module.core.backup_result import BackupResult
 import hmac
 import os
 
-from gb_module.gb_module.core.restore_result import RestoreResult
-from gb_module.gb_module.core.retrieve_result import RetrieveResult
+from gb_module.core.restore_result import RestoreResult
+from gb_module.core.retrieve_result import RetrieveResult
 from gb_packages.gs116ev2_switch_package.utils.backup_fetcher import BackupFetcher
 
 

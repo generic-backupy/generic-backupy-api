@@ -5,8 +5,8 @@ from .retrieve_result import RetrieveResult
 
 class BackupModule(BaseModule):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, temp_path="/opt/backup_temp"):
+        super().__init__(temp_path=temp_path)
 
     def do_backup(self):
         pass

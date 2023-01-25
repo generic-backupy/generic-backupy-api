@@ -42,6 +42,7 @@ services:
     container_name: generic-backupy-api-local
     volumes:
       - ../app:/code
+      - ../gb_module:/gb_module
       - ../redis:/redis
       - ../debug_temp:/debug_temp
       - ../packages:/packages
@@ -49,6 +50,8 @@ services:
       - ../postgres.env
       - ../django.env
       - ../redis.env
+    environment:
+      - PYTHONPATH=/code:/gb_module:$PYTHONPATH
     command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - ${API_MAPPING_PORT}:8000
@@ -67,6 +70,7 @@ services:
         condition: on-failure
     volumes:
       - ../app:/code
+      - ../gb_module:/gb_module
       - ../backup_temp:/backup_temp
       - ../debug_temp:/debug_temp
       - ../packages:/packages
@@ -74,6 +78,8 @@ services:
       - ../postgres.env
       - ../django.env
       - ../redis.env
+    environment:
+      - PYTHONPATH=/code:/gb_module:$PYTHONPATH
     command: python3 manage.py rqworker default --with-scheduler
     depends_on:
       - db

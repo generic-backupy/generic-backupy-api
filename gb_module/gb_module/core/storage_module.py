@@ -5,8 +5,8 @@ from .backup_result import *
 
 class StorageModule(BaseModule):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, temp_path="/opt/backup_temp"):
+        super().__init__(temp_path=temp_path)
         self.encryption_secret = {}
         self.retrieve_path = None
 

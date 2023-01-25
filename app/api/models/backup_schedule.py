@@ -61,7 +61,7 @@ class BackupSchedule(BaseModel):
     def delete(self, using=None, keep_parents=False):
         if self.current_scheduling_job_id:
             self.remove_qr_job()
-        super(BackupSchedule, self).save(using, keep_parents)
+        super(BackupSchedule, self).delete(using, keep_parents)
 
     def create_scheduled_rq_job(self, at_time):
         from api.rq_tasks.schedule_backup import schedule

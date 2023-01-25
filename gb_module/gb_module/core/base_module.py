@@ -7,14 +7,14 @@ import shutil
 
 class BaseModule:
 
-    def __init__(self):
+    def __init__(self, temp_path="/opt/backup_temp"):
         self.secrets = {}
         self.parameters = {}
         self.log = BaseModule.default_log
         self.system = {}
         self.backup_job = {}
         self.temp_path = None
-        self.set_temp_path("/opt/backup_temp")
+        self.set_temp_path(temp_path)
 
     """
     sets the temp path for temp files, and creates it if it doesn't exists

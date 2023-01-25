@@ -1,6 +1,6 @@
 import time
 
-from gb_module.gb_module.utils.selenium_util import SeleniumUtil
+from gb_module.utils.selenium_util import SeleniumUtil
 
 
 class BackupFetcher:

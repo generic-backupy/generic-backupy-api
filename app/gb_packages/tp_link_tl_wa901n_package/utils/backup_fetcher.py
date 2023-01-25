@@ -1,13 +1,6 @@
-import os
-
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 import time
-from pathlib import Path
 
-from gb_module.gb_module.utils.selenium_util import SeleniumUtil
+from gb_module.utils.selenium_util import SeleniumUtil
 
 
 class BackupFetcher:

@@ -3,17 +3,10 @@ from unittest.mock import patch, Mock
 
 from api.testing.test_utils.backup_job_test_util import BackupJobTestUtil
 
-from api.models import Backup, RestoreExecution, BackupModule, StorageModule, \
-    BackupJobStorageModule, BackupExecution, User
-from api.testing.test_utils.module_test_util import ModuleTestUtil
+from api.models import RestoreExecution, User
 from api.utils.backup_util import BackupUtil
-from api.utils.package_util import PackageUtil
 from django.test import TestCase
-from gb_module.gb_module.core.base_result import BaseResult
-from api.rq_tasks.restore import restore
-from api.rq_tasks.backup import backup
 from api.rq_tasks.schedule_backup import schedule
-import sys
 from api.models.backup_schedule import BackupSchedule
 
 class TestRestore(TestCase):

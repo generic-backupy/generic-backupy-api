@@ -1,9 +1,9 @@
 from unittest import TestCase
 from django.utils import timezone
-from gb_module.gb_module.core.base_module import BaseModule
+from gb_module.core.base_module import BaseModule
 
-from gb_module.gb_module.testing.util.module_test_util import ModuleTestUtil
-from gb_module.gb_module.testing.util.backup_result_test_util import *
+from gb_module.testing.util.module_test_util import ModuleTestUtil
+from gb_module.testing.util.backup_result_test_util import *
 from ..gb_module import *
 import os
 import shutil
