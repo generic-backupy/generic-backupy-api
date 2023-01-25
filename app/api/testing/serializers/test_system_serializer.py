@@ -7,14 +7,14 @@ from api.serializers import (SystemBaseSerializer, SystemGetShortSerializer,
 from django.test import TestCase
 
 
+
 class TestSystemSerializer(TestCase):
     def setUp(self):
-        self.user = System.objects.create(,
-            name = 'test_system'
-            description = 'test_description'
-            host = 'test_host'
+        self.user = System.objects.create(
+            name = 'test_system',
+            description = 'test_description',
+            host = 'test_host',
             additional_information = 'test_additional_information'
-
         )
  
     def test_system_post_serializer(self):
