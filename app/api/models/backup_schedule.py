@@ -66,7 +66,7 @@ class BackupSchedule(BaseModel):
     def create_scheduled_rq_job(self, at_time):
         from api.rq_tasks.schedule_backup import schedule
         queue = BackupSchedule.get_queue('default')
-        return queue.enqueue_at(at_time, schedule, self.backup_job, self.created_by, self)
+        return queue.enqueue_at(at_time, schedule, self)
 
     def remove_qr_job(self):
         queue = BackupSchedule.get_queue('default')

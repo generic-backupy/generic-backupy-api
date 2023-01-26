@@ -24,7 +24,7 @@ class TestRestore(TestCase):
     @patch.object(BackupUtil, 'do_backup')
     def test_schedule_refresh_next_time(self, mock_do_backup):
         old_time = self.backup_schedule.next_start
-        schedule(self.backup_schedule.backup_job, self.user, self.backup_schedule)
+        schedule(self.backup_schedule)
         self.assertTrue(mock_do_backup.called, "do backup wasn't called")
         self.assertNotEqual(old_time, self.backup_schedule.next_start, "next_start wasn't extended")
         self.assertIsNotNone(self.backup_schedule.last_start, "last_start shouldn't be None")
