@@ -46,8 +46,10 @@ class UserShortListSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'is_admin')
 
 
-class UserGetShortSerializer(UserSerializer):
-    pass
+class UserGetShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
 
 
 class UserOnlyIdSerializer(serializers.ModelSerializer):

@@ -1,15 +1,16 @@
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 
 from ..base import BaseModel
-from django.conf import settings
-
 from ..utils.ExecutionUtil import ExecutionUtil
 
 """
 ModelClass for a execution of a specific BackupJob (store or fetch a backup from storage)
 """
+
+
 class StorageExecution(BaseModel):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    default=None,
@@ -28,9 +29,11 @@ class StorageExecution(BaseModel):
     # backup job
     backup_job = models.ForeignKey('BackupJob', on_delete=models.CASCADE)
     # storage module
-    storage_module = models.ForeignKey('StorageModule', on_delete=models.SET_NULL, null=True, blank=True)
+    storage_module = models.ForeignKey(
+        'StorageModule', on_delete=models.SET_NULL, null=True, blank=True)
     # involved backup (created or fetched)
-    involved_backup = models.ForeignKey('Backup', on_delete=models.SET_NULL, null=True, blank=True)
+    involved_backup = models.ForeignKey(
+        'Backup', on_delete=models.SET_NULL, null=True, blank=True)
 
     # filter
     search_fields = []
