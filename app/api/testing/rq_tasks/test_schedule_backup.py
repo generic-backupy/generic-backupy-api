@@ -26,7 +26,7 @@ class TestRestore(TestCase):
         old_time = self.backup_schedule.next_start
         schedule(self.backup_schedule)
         self.assertTrue(mock_do_backup.called, "do backup wasn't called")
-        self.assertNotEqual(old_time, self.backup_schedule.next_start, "next_start wasn't extended")
+        self.assertNotEqual(old_time.timestamp(), self.backup_schedule.next_start.timestamp(), "next_start wasn't extended")
         self.assertIsNotNone(self.backup_schedule.last_start, "last_start shouldn't be None")
-        self.assertEqual(old_time, self.backup_schedule.last_start, "last_start wasn't set")
+        self.assertEqual(old_time.timestamp(), self.backup_schedule.last_start.timestamp(), "last_start wasn't set")
         self.assertTrue(self.mock_enqeue_at.enqueue_at.called, "enqueu_at wasn't called")
