@@ -26,6 +26,29 @@ class GBModule(BackupModule):
             os.chmod(private_key_path, 0o600)
         return private_key, private_key_path
 
+    def create_private_key(self, private_key, temp_folder):
+        self.log("create private key ...")
+        try:
+            private_key, private_key_path = self.create_private_key_file(private_key, temp_folder)
+        except Exception as e:
+            return BackupResult.with_error(f"private key creation error: {e}")
+
+    def create_inventory(self, temp_folder, inventory):
+        self.log("create inventory ...")
+        try:
+            with open(Path(temp_folder).joinpath("inventory"), "w") as file:
+                file.write(inventory.replace("{private_key_path}", str(Path(temp_folder).joinpath("private_key"))))
+        except Exception as e:
+            return BackupResult.with_error(f"inventory creation error: {e}")
+
+    def create_playbook(self, temp_folder, playbook, file_path_placeholder, file_path):
+        self.log("create playbook ...")
+        try:
+            with open(Path(temp_folder).joinpath("playbook"), "w") as file:
+                file.write(playbook.replace(file_path_placeholder, file_path))
+        except Exception as e:
+            return BackupResult.with_error(f"playbook creation error: {e}")
+
     def do_backup(self):
         # check secrets and params
         self.log("check secrets and params ...")
@@ -44,27 +67,19 @@ class GBModule(BackupModule):
             return BackupResult.with_error(f"temp-folder-creation-error: {e}")
 
         # create priv key
-        self.log("create private key ...")
-        try:
-            private_key, private_key_path = self.create_private_key_file(private_key, temp_folder)
-        except Exception as e:
-            return BackupResult.with_error(f"private key creation error: {e}")
+        error = self.create_private_key(private_key, temp_folder)
+        if error:
+            return error
 
         # create inventory {private_key_path}
-        self.log("create inventory ...")
-        try:
-            with open(Path(temp_folder).joinpath("inventory"), "w") as file:
-                file.write(inventory.replace("{private_key_path}", str(Path(temp_folder).joinpath("private_key"))))
-        except Exception as e:
-            return BackupResult.with_error(f"inventory creation error: {e}")
+        error = self.create_inventory(temp_folder, inventory)
+        if error:
+            return error
 
         # create playbook
-        self.log("create playbook ...")
-        try:
-            with open(Path(temp_folder).joinpath("playbook"), "w") as file:
-                file.write(playbook.replace("{dest_file_path}", str(Path(temp_folder).joinpath("backup"))))
-        except Exception as e:
-            return BackupResult.with_error(f"playbook creation error: {e}")
+        error = self.create_playbook(temp_folder, playbook, "{dest_file_path}", str(Path(temp_folder).joinpath("backup")))
+        if error:
+            return error
 
         # do the backup
         self.log("do backup ...")
@@ -116,28 +131,20 @@ class GBModule(BackupModule):
             return BackupResult.with_error(f"temp-folder-creation-error: {e}")
 
         # create priv key
-        self.log("create private key ...")
-        try:
-            private_key, private_key_path = self.create_private_key_file(private_key, temp_folder)
-        except Exception as e:
-            return BackupResult.with_error(f"private key creation error: {e}")
+        error = self.create_private_key(private_key, temp_folder)
+        if error:
+            return error
 
         # create inventory {private_key_path}
-        self.log("create inventory ...")
-        try:
-            with open(Path(temp_folder).joinpath("inventory"), "w") as file:
-                file.write(inventory.replace("{private_key_path}", str(Path(temp_folder).joinpath("private_key"))))
-        except Exception as e:
-            return BackupResult.with_error(f"inventory creation error: {e}")
+        error = self.create_inventory(temp_folder, inventory)
+        if error:
+            return error
 
         # create playbook
         self.log("create playbook ...")
-        try:
-            with open(Path(temp_folder).joinpath("playbook"), "w") as file:
-                file.write(playbook.replace("{backup_file_path}", str(retrieve_result.backup_temp_location)))
-        except Exception as e:
-            return BackupResult.with_error(f"playbook creation error: {e}")
-
+        error = self.create_playbook(temp_folder, playbook, "{backup_file_path}", str(retrieve_result.backup_temp_location))
+        if error:
+            return error
         # do the backup
         self.log("do backup ...")
         process_call = None
