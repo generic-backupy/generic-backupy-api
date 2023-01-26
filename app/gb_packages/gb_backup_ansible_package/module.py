@@ -146,7 +146,7 @@ class GBModule(BackupModule):
         if error:
             return error
         # do the backup
-        self.log("do backup ...")
+        self.log("do backup ... ")
         process_call = None
         try:
             self.log(f"run ansible-playbook -i {Path(temp_folder).joinpath('inventory')} {Path(temp_folder).joinpath('playbook')} --ssh-common-args='-o StrictHostKeyChecking=no'")
