@@ -1,8 +1,9 @@
 from unittest import TestCase
+from unittest.mock import patch, Mock
 
 from gb_module.testing.util.module_test_util import ModuleTestUtil
 from gb_module.testing.util.backup_result_test_util import *
-from module import *
+from ..module import *
 import os
 
 # models test
@@ -26,3 +27,28 @@ class GeneralTest(TestCase):
         print(f"our path: {os.getcwd()}\n{os.listdir()}")
         response = self.module.do_backup()
         self.assertIsNotNone(response)
+
+    @patch.object(subprocess, "run")
+    def test_do_backup(self, mock_subprocess_run):
+        mock_subprocess_run.return_value = Mock(stderr=None, stdout="Success")
+        self.module.parameters |= {
+            "inventory": "inventory",
+            "playbook": "playbook",
+            "private_key": "private_key"
+        }
+        response = self.module.do_backup()
+        self.assertEqual(response.error, "Error at download process!")
+        self.assertTrue(mock_subprocess_run.called)
+
+    @patch.object(subprocess, "run")
+    def test_do_restore(self, mock_subprocess_run):
+        mock_subprocess_run.return_value = Mock(stderr=None, stdout="Success")
+        mock_retrieve_result = Mock(backup_temp_location="test")
+        self.module.parameters |= {
+            "inventory": "inventory",
+            "playbook": "playbook",
+            "private_key": "private_key"
+        }
+        response = self.module.do_restore(mock_retrieve_result)
+        self.assertIsNone(response.error)
+        self.assertTrue(mock_subprocess_run.called)

@@ -30,8 +30,6 @@ class GBModule(BackupModule):
         # check secrets and params
         self.log("check secrets and params ...")
         try:
-            password = self.get_input_with_name_or_die("password")
-            host = self.get_input_with_name_or_die("host")
             inventory = self.get_input_with_name_or_die("inventory")
             playbook = self.get_input_with_name_or_die("playbook")
             private_key = self.get_input_with_name_or_die("private_key")
@@ -102,8 +100,6 @@ class GBModule(BackupModule):
         # check secrets and params
         self.log("check secrets and params ...")
         try:
-            password = self.get_input_with_name_or_die("password")
-            host = self.get_input_with_name_or_die("host")
             inventory = self.get_input_with_name_or_die("inventory")
             inventory = self.get_input_with_name('inventory_restore') or inventory
             playbook = self.get_input_with_name_or_die("playbook")
