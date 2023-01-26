@@ -19,8 +19,8 @@ class Category(BaseModel):
 
     # filter
     search_fields = ['name']
-    ordering_fields = ['name']
-    ordering = ['name']
+    ordering_fields = ['id']
+    ordering = ['-id']
 
     def __str__(self):
         return f"{self.id} - {self.name}"

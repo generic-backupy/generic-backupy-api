@@ -28,8 +28,8 @@ class RestoreExecution(BaseModel):
 
     # filter
     search_fields = []
-    ordering_fields = []
-    ordering = []
+    ordering_fields = ['id']
+    ordering = ['-id']
 
     def __str__(self):
         if self.backup_instance is not None:

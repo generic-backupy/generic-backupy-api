@@ -32,8 +32,8 @@ class BackupExecution(BaseModel):
 
     # filter
     search_fields = []
-    ordering_fields = []
-    ordering = []
+    ordering_fields = ['id']
+    ordering = ['-id']
 
     def __str__(self):
         return f"{self.id} - {ExecutionUtil.get_state_string(self.state)}" \
